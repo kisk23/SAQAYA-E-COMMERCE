@@ -1,28 +1,15 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <router-view />
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts">
+import Vue from 'vue'
 
-export default {
+//This object is a Vue component—apply Vue (typings) here. thats why we use Vue.extend() instead of export default { ... }
+export default Vue.extend({
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  computed: {},
+  methods: {},
+  components: {},
+})
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
