@@ -52,7 +52,7 @@ export default Vue.extend({
 }
 
 .header__container {
-  max-width: 1280px;
+  max-width: 1210px;
   margin: 0 auto;
   padding: 1rem 1.5rem;
   display: flex;
