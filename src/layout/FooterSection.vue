@@ -25,21 +25,21 @@
       <div class="footer__column">
         <h3 class="footer__title">Account</h3>
         <ul class="footer__list">
-          <li><a href="#" class="footer__link">My Account</a></li>
-          <li><a href="#" class="footer__link">Login / Register</a></li>
-          <li><a href="#" class="footer__link">Cart</a></li>
-          <li><a href="#" class="footer__link">Wishlist</a></li>
-          <li><a href="#" class="footer__link">Shop</a></li>
+          <footer-link label="My Account" link="#" />
+          <footer-link label="Order Tracking" link="#" />
+          <footer-link label="Checkout" link="#" />
+          <footer-link label="Wishlist" link="#" />
+          <footer-link label="Login" link="#" />
         </ul>
       </div>
 
       <div class="footer__column">
         <h3 class="footer__title">Quick Link</h3>
         <ul class="footer__list">
-          <li><a href="#" class="footer__link">Privacy Policy</a></li>
-          <li><a href="#" class="footer__link">Terms Of Use</a></li>
-          <li><a href="#" class="footer__link">FAQ</a></li>
-          <li><a href="#" class="footer__link">Contact</a></li>
+          <footer-link label="Privacy Policy" link="#" />
+          <footer-link label="Terms Of Use" link="#" />
+          <footer-link label="FAQ" link="#" />
+          <footer-link label="Contact" link="#" />
         </ul>
       </div>
 
@@ -86,9 +86,12 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+import FooterLink from '@/components/FooterLink.vue'
+export default Vue.extend({
   name: 'FooterSection',
-}
+  components: { FooterLink },
+})
 </script>
 
 <style scoped>
@@ -139,14 +142,6 @@ export default {
 .footer__list {
   list-style: none;
   padding: 0;
-}
-
-.footer__link {
-  display: block;
-  color: #ccc;
-  font-size: 14px;
-  margin-bottom: 8px;
-  text-decoration: none;
 }
 
 .footer__link:hover {

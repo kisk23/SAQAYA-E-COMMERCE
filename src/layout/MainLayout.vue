@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import HeaderSection from './HeaderSection.vue'
-import FooterSection from './FooterSection.vue'
+import HeaderSection from '@/layout/HeaderSection.vue'
+import FooterSection from '@/layout/FooterSection.vue'
 
 export default Vue.extend({
   name: 'MainLayout',

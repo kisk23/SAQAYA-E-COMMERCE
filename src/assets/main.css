@@ -8,4 +8,10 @@ body {
   font-family: system-ui, sans-serif;
 
   line-height: 1.5;
+
+  background: #fff !important;
+  color: #000 !important;
+}
+html {
+  color-scheme: light;
 }
