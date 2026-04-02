@@ -11,17 +11,18 @@
   </section>
 </template>
 
-<script>
-export default {
-  data() {
-    return {}
-  },
+<script lang="ts">
+import Vue from 'vue'
+import { Product } from '@/types'
+
+export default Vue.extend({
+  name: 'ProductsView',
   computed: {
-    products() {
-      return this.$store.getters.products
+    products(): Product[] {
+      return this.$store.getters.products as Product[]
     },
   },
-}
+})
 </script>
 
 <style scoped></style>

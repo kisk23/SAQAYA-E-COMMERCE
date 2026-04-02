@@ -1,7 +1,5 @@
 <template>
   <section>
-    <h2>Home</h2>
-
     <HeroSection />
   </section>
 </template>

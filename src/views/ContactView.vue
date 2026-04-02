@@ -19,9 +19,12 @@
   </section>
 </template>
 
-<script>
-export default {
-  data() {
+<script lang="ts">
+import Vue from 'vue'
+
+export default Vue.extend({
+  name: 'ContactView',
+  data(): { contact: { name: string; email: string; message: string } } {
     return {
       contact: {
         name: '',
@@ -31,9 +34,9 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
+    handleSubmit(): void {
       console.log(this.contact)
     },
   },
-}
+})
 </script>

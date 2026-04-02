@@ -7,6 +7,8 @@ export interface RootState {
   products: Product[]
 }
 // using dumb json data for products, in a real app this would come from an API
+//store Cart and User data here as well in a real app
+
 export default new Vuex.Store<RootState>({
   state: {
     products: [

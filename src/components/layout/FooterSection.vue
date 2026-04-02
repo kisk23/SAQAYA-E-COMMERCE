@@ -8,7 +8,7 @@
 
         <div class="footer__input-box">
           <input type="email" placeholder="Enter your email" class="footer__input" />
-          <img src="@/assets/images/icon-send.svg" class="footer__input-btn" />
+          <img src="@/assets/images/icon-send.svg" class="footer__input-btn" alt="Send email" />
         </div>
       </div>
 
@@ -48,19 +48,35 @@
         <p class="footer__small">Save $3 with App New User Only</p>
 
         <div class="footer__app">
-          <img src="@/assets/images/Qr Code.svg" class="footer__qr" />
+          <img src="@/assets/images/Qr Code.svg" class="footer__qr" alt="QR code to download app" />
 
           <div class="footer__stores">
-            <img src="@/assets/images/AppStore.svg" class="footer__store-img" />
-            <img src="@/assets/images/googlePlay.svg" class="footer__store-img" />
+            <img
+              src="@/assets/images/AppStore.svg"
+              class="footer__store-img"
+              alt="Download on the App Store"
+            />
+            <img
+              src="@/assets/images/googlePlay.svg"
+              class="footer__store-img"
+              alt="Get it on Google Play"
+            />
           </div>
         </div>
 
         <div class="footer__socials">
-          <i class="footer__icon fab fa-facebook-f"></i>
-          <i class="footer__icon fab fa-twitter"></i>
-          <i class="footer__icon fab fa-instagram"></i>
-          <i class="footer__icon fab fa-linkedin-in"></i>
+          <a href="#" class="footer__social-link" aria-label="Facebook">
+            <i class="footer__icon fab fa-facebook-f" aria-hidden="true"></i>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Twitter">
+            <i class="footer__icon fab fa-twitter" aria-hidden="true"></i>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Instagram">
+            <i class="footer__icon fab fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="LinkedIn">
+            <i class="footer__icon fab fa-linkedin-in" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
     </div>
@@ -68,6 +84,12 @@
     <div class="footer__bottom">© Copyright Rimel 2022. All right reserved</div>
   </footer>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'FooterSection',
+}
+</script>
 
 <style scoped>
 .footer {
@@ -180,10 +202,25 @@
 
 .footer__socials {
   margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer__social-link {
+  color: #fff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer__social-link:hover {
+  color: #ddd;
 }
 
 .footer__icon {
-  margin-right: 1px;
+  margin-right: 0;
   cursor: pointer;
 }
 
