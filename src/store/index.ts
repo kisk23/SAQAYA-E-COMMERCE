@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { Product } from '@/types'
+import { Product } from '@/types/types'
 Vue.use(Vuex)
 
 export interface RootState {

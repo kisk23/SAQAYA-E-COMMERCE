@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Product } from '@/types'
+import { Product } from '@/types/types'
 
 export default Vue.extend({
   name: 'ProductsView',

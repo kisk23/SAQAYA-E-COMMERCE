@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { Product } from '@/types'
+import { Product } from '@/types/types'
 
 export default defineComponent({
   name: 'ProductView',
