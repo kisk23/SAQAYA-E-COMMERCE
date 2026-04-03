@@ -5,13 +5,11 @@ Vue.use(Vuex)
 
 export interface RootState {
   products: Product[]
+  cart: Product[]
 }
 // using dumb json data for products, in a real app this would come from an API
 //store Cart and User data here as well in a real app
-
-export default new Vuex.Store<RootState>({
-  state: {
-    products: [
+ const productsList= [
       {
         id: 1,
         name: 'HAVIT HV-G92 Gamepad',
@@ -108,7 +106,36 @@ export default new Vuex.Store<RootState>({
         description:
           'Experience the ultimate gaming performance with the HAVIT HV-G92 Gamepad. Featuring ergonomic design, responsive controls, and customizable buttons, this gamepad is perfect for both casual and competitive gamers. Enjoy seamless connectivity and enhanced gameplay on your PC or console.',
       },
-    ],
+    ]
+ const cartList = [
+      {
+        id: 1,
+        name: 'HAVIT HV-G92 Gamepad',
+        price: 120,
+        oldPrice: 160,
+        discount: '-40%',
+        rating: 5,
+        reviews: 88,
+        image: require('@/assets/images/Product1.svg'),
+        description: 'Experience the ultimate gaming performance with the HAVIT HV-G92 Gamepad. Featuring ergonomic design, responsive controls, and customizable buttons, this gamepad is perfect for both casual and competitive gamers. Enjoy seamless connectivity and enhanced gameplay on your PC or console.',
+      },
+      {
+        id: 2,
+        name: 'HAVIT HV-G92 Gamepad',
+        price: 110,
+        oldPrice: 150,
+        discount: '-27%',
+        rating: 4,
+        reviews: 65,
+        image: require('@/assets/images/Product1.svg'),
+        description: 'Experience the ultimate gaming performance with the HAVIT HV-G92 Gamepad. Featuring ergonomic design, responsive controls, and customizable buttons, this gamepad is perfect for both casual and competitive gamers. Enjoy seamless connectivity and enhanced gameplay on your PC or console.',
+      }
+    ]
+export default new Vuex.Store<RootState>({
+  state: {
+   
+  products: productsList,
+    cart: cartList,
   },
   getters: {
     products: (state) => state.products,

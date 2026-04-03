@@ -7,7 +7,6 @@
 
       <nav class="header__nav">
         <router-link class="header__link" to="/">Home</router-link>
-        <!-- <router-link class="header__link" to="/products">Products</router-link> -->
         <router-link class="header__link" to="/contact">Contact</router-link>
         <router-link class="header__link" to="/about">About</router-link>
       </nav>
@@ -27,10 +26,14 @@
           </button>
         </div>
 
-        <button class="header__cart">
-          <img src="@/assets/images/Cart1.png" alt="Cart" />
-          <span class="header__badge">2</span>
-        </button>
+       <div class="header__cart-wrapper">
+  <button class="header__cart" @click="$emit('toggle-cart')">
+    <img src="@/assets/images/Cart1.png" alt="Cart" />
+    <span class="header__badge">{{ cartCount }}</span>
+  </button>
+
+  <CartDropdown  />
+</div>
       </div>
     </div>
   </header>
@@ -38,9 +41,16 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import CartDropdown from "@/components/CartDropdown.vue"
 
 export default Vue.extend({
   name: 'HeaderSection',
+  components: { CartDropdown },
+  computed: {
+  cartCount(): number {
+    return this.$store.state.cart.length;
+  }
+}
 })
 </script>
 <style scoped>
@@ -169,6 +179,15 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.header__cart-wrapper {
+  position: relative;
+}
+
+.header__cart-wrapper:hover .cart-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 @media (min-width: 768px) {
