@@ -1,12 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { Product } from '@/types/types'
+import type { RootState } from '@/types'
 Vue.use(Vuex)
-
-export interface RootState {
-  products: Product[]
-  cart: Product[]
-}
 // using dumb json data for products, in a real app this would come from an API
 //store Cart and User data here as well in a real app
 const productsList = [

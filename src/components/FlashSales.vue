@@ -26,7 +26,7 @@
 <script lang="ts">
 import Swiper from 'swiper'
 import 'swiper/css'
-import { Product } from '@/types/types'
+import type { Product } from '@/types'
 import Vue from 'vue'
 import TodayBadge from './TodayBadge.vue'
 import SectionHeader from './SectionHeader.vue'
