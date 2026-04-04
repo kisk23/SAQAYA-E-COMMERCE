@@ -26,14 +26,14 @@
           </button>
         </div>
 
-       <div class="header__cart-wrapper">
-  <button class="header__cart" @click="$emit('toggle-cart')">
-    <img src="@/assets/images/Cart1.png" alt="Cart" />
-    <span class="header__badge">{{ cartCount }}</span>
-  </button>
+        <div class="header__cart-wrapper">
+          <button class="header__cart" @click="$emit('toggle-cart')">
+            <img src="@/assets/images/Cart1.png" alt="Cart" />
+            <span class="header__badge">{{ cartCount }}</span>
+          </button>
 
-  <CartDropdown  />
-</div>
+          <CartDropdown />
+        </div>
       </div>
     </div>
   </header>
@@ -41,16 +41,16 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import CartDropdown from "@/components/CartDropdown.vue"
+import CartDropdown from '@/components/CartDropdown.vue'
 
 export default Vue.extend({
   name: 'HeaderSection',
   components: { CartDropdown },
   computed: {
-  cartCount(): number {
-    return this.$store.state.cart.length;
-  }
-}
+    cartCount(): number {
+      return this.$store.state.cart.length
+    },
+  },
 })
 </script>
 <style scoped>

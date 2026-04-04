@@ -4,7 +4,7 @@
       <div class="hero__inner">
         <div class="hero__content">
           <div class="hero__brand">
-            <img src="@/assets/images/Apple_logo.svg" alt="Apple Logo" class="hero__logo" />
+            <img src="@/assets/images/AppleLogo.svg" alt="Apple Logo" class="hero__logo" />
             <span class="hero__series">iPhone 14 Series</span>
           </div>
 
@@ -16,7 +16,7 @@
           <a href="#" class="hero__cta"> Shop Now <span class="hero__arrow">→</span> </a>
         </div>
 
-        <img src="@/assets/images/hero-frame.svg" alt="Hero Image" class="hero__image" />
+        <img src="@/assets/images/HeroFrame.svg" alt="Hero Image" class="hero__image" />
       </div>
     </div>
 

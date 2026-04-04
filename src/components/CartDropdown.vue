@@ -1,15 +1,9 @@
 <template>
   <div class="cart-dropdown">
-    <div v-if="cart.length === 0" class="cart-dropdown__empty">
-      Cart is empty
-    </div>
+    <div v-if="cart.length === 0" class="cart-dropdown__empty">Cart is empty</div>
 
     <div v-else class="cart-dropdown__items">
-      <div 
-        class="cart-dropdown__item"
-        v-for="item in cart"
-        :key="item.id"
-      >
+      <div class="cart-dropdown__item" v-for="item in cart" :key="item.id">
         <img :src="item.image" class="cart-dropdown__image" />
 
         <div class="cart-dropdown__info">
@@ -22,17 +16,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
-import { Product } from "@/types/types"
+import Vue from 'vue'
+import { Product } from '@/types/types'
 
 export default Vue.extend({
-  name: "CartDropdown",
+  name: 'CartDropdown',
 
   computed: {
     cart(): Product[] {
-      return this.$store.state.cart;
-    }
-  }
+      return this.$store.state.cart
+    },
+  },
 })
 </script>
 
@@ -43,7 +37,7 @@ export default Vue.extend({
   right: 0;
   width: 300px;
   background: #fff;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   padding: 12px;
 
@@ -52,7 +46,6 @@ export default Vue.extend({
   pointer-events: none;
   transition: all 0.25s ease;
 }
-
 
 .cart-dropdown__item {
   display: flex;
@@ -74,7 +67,6 @@ export default Vue.extend({
   color: #777;
 }
 
-/* EMPTY */
 .cart-dropdown__empty {
   text-align: center;
   font-size: 14px;

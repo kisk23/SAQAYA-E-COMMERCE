@@ -8,7 +8,7 @@
 
         <div class="footer__input-box">
           <input type="email" placeholder="Enter your email" class="footer__input" />
-          <img src="@/assets/images/icon-send.svg" class="footer__input-btn" alt="Send email" />
+          <img src="@/assets/images/IconSend.svg" class="footer__input-btn" alt="Send email" />
         </div>
       </div>
 
@@ -48,7 +48,7 @@
         <p class="footer__small">Save $3 with App New User Only</p>
 
         <div class="footer__app">
-          <img src="@/assets/images/Qr Code.svg" class="footer__qr" alt="QR code to download app" />
+          <img src="@/assets/images/QrCode.svg" class="footer__qr" alt="QR code to download app" />
 
           <div class="footer__stores">
             <img
@@ -57,7 +57,7 @@
               alt="Download on the App Store"
             />
             <img
-              src="@/assets/images/googlePlay.svg"
+              src="@/assets/images/GooglePlay.svg"
               class="footer__store-img"
               alt="Get it on Google Play"
             />

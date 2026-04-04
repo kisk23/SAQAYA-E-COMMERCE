@@ -7,10 +7,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import Vue from 'vue'
 import { Product } from '@/types/types'
 
-export default defineComponent({
+export default Vue.extend({
   name: 'ProductView',
   props: {
     id: {

@@ -1,7 +1,7 @@
 <template>
   <section class="flash-sales">
     <div class="flash-sales__header">
-      <HeadingButton label="Today's" />
+      <TodayBadge label="Today's" />
       <SectionHeader
         title="Flash Sales"
         @prev="swiperInstance?.slidePrev()"
@@ -28,13 +28,13 @@ import Swiper from 'swiper'
 import 'swiper/css'
 import { Product } from '@/types/types'
 import Vue from 'vue'
-import HeadingButton from './HeadingButton.vue'
+import TodayBadge from './TodayBadge.vue'
 import SectionHeader from './SectionHeader.vue'
 import ProductCard from './ProductCard.vue'
 
 export default Vue.extend({
   name: 'FlashSales',
-  components: { HeadingButton, SectionHeader, ProductCard },
+  components: { TodayBadge, SectionHeader, ProductCard },
   data(): { swiperInstance: Swiper | null } {
     return {
       swiperInstance: null,
