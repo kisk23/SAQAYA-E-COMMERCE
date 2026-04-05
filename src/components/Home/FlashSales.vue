@@ -42,6 +42,7 @@ export default Vue.extend({
   },
   computed: {
     products(): Product[] {
+      console.log('Accessing products from store:', this.$store.state.products)
       return this.$store.getters.products as Product[]
     },
   },
@@ -112,7 +113,7 @@ export default Vue.extend({
 }
 
 .flash-sales__button {
-  background: #e53935;
+  background: #db4444;
   color: white;
   border: none;
   padding: 12px 24px;
