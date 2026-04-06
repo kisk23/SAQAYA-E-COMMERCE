@@ -44,7 +44,7 @@ export default Vue.extend({
   name: 'BrowseByCategory',
   data() {
     return {
-      activeId: null as number | null,
+      activeId: null as number | null, // The activeId is used to track which category is currently selected by the user to be added if wanted
     }
   },
   computed: {
@@ -63,6 +63,11 @@ export default Vue.extend({
   },
   components: {
     TodayBadge,
+  },
+  created() {
+    if (!this.$store.state.categories.length) {
+      this.$store.dispatch('fetchCategories')
+    }
   },
 })
 </script>

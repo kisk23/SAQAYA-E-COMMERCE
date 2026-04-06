@@ -12,7 +12,11 @@
     <div ref="flashSalesSwiper" class="swiper flash-sales__swiper">
       <div class="swiper-wrapper">
         <div v-for="product in products" :key="product.id" class="swiper-slide flash-sales__slide">
-          <ProductCard :product="product" />
+          <ProductCard :product="product">
+            <template #discount-badge>
+              <span class="product-card__discount">{{ product.discountPercentage }}%</span>
+            </template>
+          </ProductCard>
         </div>
       </div>
     </div>
@@ -46,6 +50,11 @@ export default Vue.extend({
       console.log('Accessing products from store:', this.$store.state.products)
       return this.$store.getters.products as Product[]
     },
+  },
+  created() {
+    if (!this.products.length) {
+      this.$store.dispatch('fetchProducts')
+    }
   },
   mounted() {
     this.initSwiper()

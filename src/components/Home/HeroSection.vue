@@ -13,7 +13,10 @@
             off Voucher
           </h1>
 
-          <a href="#" class="hero__cta"> Shop Now <span class="hero__arrow">→</span> </a>
+          <router-link to="/products" class="hero__cta">
+            Shop Now
+            <span class="hero__arrow">→</span>
+          </router-link>
         </div>
 
         <img src="@/assets/images/HeroFrame.svg" alt="Hero Image" class="hero__image" />

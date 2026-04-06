@@ -16,7 +16,9 @@
       </div>
     </div>
     <div class="products__items">
-      <ProductCard v-for="product in products" :key="product.id" :product="product" />
+      <ProductCard v-for="product in products" :key="product.id" :product="product">
+        <template #discount-badge />
+      </ProductCard>
     </div>
 
     <div v-if="products.length === 0" class="products__empty">No products available</div>

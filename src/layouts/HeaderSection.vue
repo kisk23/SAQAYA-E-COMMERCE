@@ -48,7 +48,10 @@ export default Vue.extend({
   components: { CartDropdown },
   computed: {
     cartCount(): number {
-      return this.$store.state.cart.length
+      return this.$store.state.cart.reduce(
+        (sum: number, item: { quantity: number }) => sum + item.quantity,
+        0
+      )
     },
   },
 })
@@ -182,9 +185,11 @@ export default Vue.extend({
 }
 .header__cart-wrapper {
   position: relative;
+  padding-bottom: 8px;
 }
 
-.header__cart-wrapper:hover .cart-dropdown {
+.header__cart-wrapper:hover .cart-dropdown,
+.header__cart-wrapper .cart-dropdown:hover {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
