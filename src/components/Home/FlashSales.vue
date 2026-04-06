@@ -20,6 +20,7 @@
     <div class="flash-sales__footer">
       <router-link to="/products" class="flash-sales__button">View All Products</router-link>
     </div>
+    <div class="section-divider"></div>
   </section>
 </template>
 
@@ -120,5 +121,12 @@ export default Vue.extend({
   border-radius: 4px;
   cursor: pointer;
   text-decoration: none;
+}
+.section-divider {
+  width: 100%;
+  max-width: 1170px;
+  height: 1px;
+  background: #e5e5e5;
+  margin: 84px auto 0;
 }
 </style>

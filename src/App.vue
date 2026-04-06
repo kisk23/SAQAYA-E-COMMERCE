@@ -14,6 +14,7 @@ export default Vue.extend({
   created() {
     // Load products when the app is created
     this.$store.dispatch('fetchProducts')
+    this.$store.dispatch('fetchCategories')
   },
 })
 </script>
