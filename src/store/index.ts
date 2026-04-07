@@ -4,12 +4,15 @@ import type { RootState, Product } from '@/types'
 import axios from 'axios'
 import type { CartItem, NormalizedCartItem } from '@/types/cart'
 Vue.use(Vuex)
+const PRODUCTS_CACHE_KEY = 'products_cache'
+const PRODUCTS_CACHE_TTL = 1000 * 60 * 5 // 5 minutes
 
 export default new Vuex.Store<RootState>({
   state: {
     products: [],
     cart: [],
     categories: [],
+    loadingProducts: false,
   },
   getters: {
     products: (state) => state.products,
@@ -80,24 +83,60 @@ export default new Vuex.Store<RootState>({
       }
     },
   },
+
+  //   If you're using modern Vue (3+), Pinia has mostly replaced Vuex.
+  // No commit vs dispatch
+  // You just call functions directly
   actions: {
-    async fetchProducts({ commit }) {
-      console.log('ACTION STARTED')
+    async fetchProducts({ state, commit }) {
+      // prevent duplicate calls
+      if (state.products.length || state.loadingProducts) return
+
+      state.loadingProducts = true
 
       try {
+        //  check localStorage cache
+        const cached = localStorage.getItem(PRODUCTS_CACHE_KEY)
+
+        if (cached) {
+          try {
+            const { data, timestamp } = JSON.parse(cached)
+
+            //  validate time to live
+            if (Date.now() - timestamp < PRODUCTS_CACHE_TTL) {
+              commit('setProducts', data)
+              return
+            }
+          } catch (e) {
+            console.warn('Invalid cache, ignoring')
+          }
+        }
+
+        //  fetch from API
         const response = await axios.get('https://dummyjson.com/products')
 
-        console.log('AXIOS RESPONSE:', response.data)
+        const products = response.data.products
 
-        commit('setProducts', response.data.products)
+        commit('setProducts', products)
+
+        //  save to cache
+        localStorage.setItem(
+          PRODUCTS_CACHE_KEY,
+          JSON.stringify({
+            data: products,
+            timestamp: Date.now(),
+          })
+        )
       } catch (error) {
         console.error('Error loading products:', error)
+      } finally {
+        state.loadingProducts = false
       }
     },
+    //i want to fetch categories from the API and store them in the Vuex state.
+    // maybe map it to icons since the API returns category names without icons.
     async fetchCategories({ commit }) {
       console.log('FETCH CATEGORIES STARTED')
-      //i want to fetch categories from the API and store them in the Vuex state.
-      // maybe map it to icons since the API returns category names without icons.
       try {
         const response = await axios.get('https://dummyjson.com/products/category-list')
 

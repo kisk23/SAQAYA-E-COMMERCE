@@ -46,12 +46,25 @@ import CartDropdown from '@/components/CartDropdown.vue'
 export default Vue.extend({
   name: 'HeaderSection',
   components: { CartDropdown },
+  props: {
+    isCartOpen: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+
   computed: {
     cartCount(): number {
       return this.$store.state.cart.reduce(
         (sum: number, item: { quantity: number }) => sum + item.quantity,
         0
       )
+    },
+  },
+  methods: {
+    toggleCart() {
+      this.$emit('toggle-cart')
     },
   },
 })

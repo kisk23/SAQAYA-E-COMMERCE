@@ -5,4 +5,5 @@ export interface RootState {
   products: Product[]
   cart: CartItem[]
   categories: string[]
+  loadingProducts: boolean
 }
