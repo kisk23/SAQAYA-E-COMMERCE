@@ -41,8 +41,13 @@ export default Vue.extend({
   },
   computed: {
     products(): Product[] {
-      return this.$store.getters.products as Product[]
+      return this.$store.getters['product/products'] as Product[]
     },
+  },
+  created() {
+    if (!this.products.length) {
+      this.$store.dispatch('product/fetchProducts')
+    }
   },
 })
 </script>
@@ -73,13 +78,6 @@ export default Vue.extend({
   margin: 0;
 }
 
-.products__items {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
-}
-
 .products__load-more {
   padding: 12px 48px;
   background-color: #ef4444;
@@ -89,9 +87,31 @@ export default Vue.extend({
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease;
+  transition: background-color 0.2s ease;
+  background-color: 0.2s ease transform 0.1s ease;
   margin: auto;
+}
+.products__items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .products__items {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .products__items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .products__items {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

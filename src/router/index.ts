@@ -6,8 +6,8 @@ import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import ContactView from '@/views/ContactView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
-import ProductsView from '@/views/ProductsView.vue'
-import ProductView from '@/views/ProductView.vue'
+import ProductsView from '@/views/products/ProductsView.vue'
+import ProductView from '@/views/products/ProductView.vue'
 
 Vue.use(VueRouter)
 

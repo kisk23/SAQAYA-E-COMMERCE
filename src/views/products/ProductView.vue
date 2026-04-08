@@ -21,7 +21,7 @@ export default Vue.extend({
   computed: {
     product(): Product | undefined {
       const id = Number(this.id)
-      return this.$store.getters.getProductById(id)
+      return this.$store.getters['product/getProductById'](id) as Product | undefined
     },
   },
 })

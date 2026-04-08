@@ -58,7 +58,15 @@
       "prettier"
     ],
     "rules": {
-      "@typescript-eslint/no-var-requires": "off"
+      "@typescript-eslint/no-var-requires": "off",
+      "vue/block-lang": [
+        "error",
+        {
+          "script": {
+            "lang": "ts"
+          }
+        }
+      ]
     }
   },
   "browserslist": [

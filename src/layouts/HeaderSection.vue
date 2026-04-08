@@ -27,12 +27,12 @@
         </div>
 
         <div class="header__cart-wrapper">
-          <button class="header__cart" @click="$emit('toggle-cart')">
+          <button class="header__cart" @click="toggleCart">
             <img src="@/assets/images/Cart1.png" alt="Cart" />
             <span class="header__badge">{{ cartCount }}</span>
           </button>
 
-          <CartDropdown />
+          <CartDropdown :isOpen="isCartOpen" @click.stop />
         </div>
       </div>
     </div>
@@ -46,25 +46,20 @@ import CartDropdown from '@/components/CartDropdown.vue'
 export default Vue.extend({
   name: 'HeaderSection',
   components: { CartDropdown },
-  props: {
-    isCartOpen: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
+  data() {
+    return {
+      isCartOpen: false,
+    }
   },
 
   computed: {
     cartCount(): number {
-      return this.$store.state.cart.reduce(
-        (sum: number, item: { quantity: number }) => sum + item.quantity,
-        0
-      )
+      return this.$store.getters['cart/totalItems']
     },
   },
   methods: {
     toggleCart() {
-      this.$emit('toggle-cart')
+      this.isCartOpen = !this.isCartOpen
     },
   },
 })
@@ -199,13 +194,6 @@ export default Vue.extend({
 .header__cart-wrapper {
   position: relative;
   padding-bottom: 8px;
-}
-
-.header__cart-wrapper:hover .cart-dropdown,
-.header__cart-wrapper .cart-dropdown:hover {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
 }
 
 @media (min-width: 768px) {

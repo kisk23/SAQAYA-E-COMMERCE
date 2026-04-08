@@ -18,55 +18,24 @@
 import Vue from 'vue'
 import TodayBadge from './TodayBadge.vue'
 
-const categoryMap: Record<string, { label: string; icon: string }> = {
-  beauty: {
-    label: 'Beauty',
-    icon: '/images/categories/beauty.svg',
-  },
-  furniture: {
-    label: 'Furniture',
-    icon: '/images/categories/furniture.svg',
-  },
-  fragrances: {
-    label: 'Fragrance',
-    icon: '/images/categories/fragrance.svg',
-  },
-  'mobile-accessories': {
-    label: 'Mobile Accessories',
-    icon: '/images/categories/mobile.svg',
-  },
-  'home-decoration': {
-    label: 'Home Accessories',
-    icon: '/images/categories/home.svg',
-  },
-}
 export default Vue.extend({
   name: 'BrowseByCategory',
   data() {
     return {
-      activeId: null as number | null, // The activeId is used to track which category is currently selected by the user to be added if wanted
+      activeId: null as number | null,
     }
   },
   computed: {
-    // This computed property maps the category names from the store to their
-    // corresponding labels and icons defined in the categoryMap.
-    //  It filters out any categories that don't have a mapping and returns an array
     mappedCategories() {
-      return this.$store.state.categories
-        .filter((cat: string) => categoryMap[cat])
-        .map((cat: string, index: number) => ({
-          id: index,
-          name: categoryMap[cat].label,
-          icon: categoryMap[cat].icon,
-        }))
+      return this.$store.getters['category/mappedCategories']
     },
   },
   components: {
     TodayBadge,
   },
   created() {
-    if (!this.$store.state.categories.length) {
-      this.$store.dispatch('fetchCategories')
+    if (!this.$store.getters['category/categories'].length) {
+      this.$store.dispatch('category/fetchCategories')
     }
   },
 })
@@ -74,7 +43,7 @@ export default Vue.extend({
 
 <style scoped>
 .browse__categories {
-  max-width: 1148px;
+  max-width: 1145px;
   margin: 60px auto;
   display: flex;
   flex-direction: column;
@@ -86,6 +55,8 @@ export default Vue.extend({
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  margin-top: 48px;
+  max-width: 1100;
 }
 
 .categories__item {
@@ -108,12 +79,8 @@ export default Vue.extend({
 
 .categories__item:hover {
   border-color: #999;
-}
-
-.categories__item--active {
   background: #db4444;
   color: #fff;
-  border-color: #db4444;
 }
 
 .categories__icon {

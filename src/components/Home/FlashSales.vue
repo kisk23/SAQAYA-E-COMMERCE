@@ -47,13 +47,12 @@ export default Vue.extend({
   },
   computed: {
     products(): Product[] {
-      console.log('Accessing products from store:', this.$store.state.products)
-      return this.$store.getters.products as Product[]
+      return this.$store.getters['product/products']
     },
   },
   created() {
     if (!this.products.length) {
-      this.$store.dispatch('fetchProducts')
+      this.$store.dispatch('product/fetchProducts')
     }
   },
   mounted() {

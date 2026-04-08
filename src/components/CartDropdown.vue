@@ -1,5 +1,9 @@
 <template>
-  <aside class="cart-dropdown" aria-label="Shopping cart preview">
+  <aside
+    class="cart-dropdown"
+    :class="{ 'cart-dropdown--active': isOpen }"
+    aria-label="Shopping cart preview"
+  >
     <div class="cart-dropdown__header">
       <h3 class="cart-dropdown__title">Shopping Cart</h3>
       <span class="cart-dropdown__count"
@@ -54,29 +58,33 @@ import Vue from 'vue'
 import type { NormalizedCartItem } from '@/types/cart'
 export default Vue.extend({
   name: 'CartDropdown',
-
+  props: {
+    isOpen: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   computed: {
-    // should we use a getter for this in the store instead ?
-    // already done
     cartItems(): NormalizedCartItem[] {
-      return this.$store.getters.cartItems
+      return this.$store.getters['cart/cartItems'] as NormalizedCartItem[]
     },
     totalItems(): number {
-      return this.$store.getters.totalItems
+      return this.$store.getters['cart/totalItems']
     },
     cartTotal() {
-      return this.$store.getters.cartTotal
+      return this.$store.getters['cart/cartTotal']
     },
   },
   methods: {
     increase(productId: number): void {
-      this.$store.commit('incrementCartItem', productId)
+      this.$store.commit('cart/incrementCartItem', productId)
     },
     decrease(productId: number): void {
-      this.$store.commit('decreaseCartItem', productId)
+      this.$store.commit('cart/decreaseCartItem', productId)
     },
     remove(productId: number): void {
-      this.$store.commit('removeFromCart', productId)
+      this.$store.commit('cart/removeFromCart', productId)
     },
     formatPrice(value: number): string {
       return value.toFixed(2)
@@ -100,10 +108,15 @@ export default Vue.extend({
   flex-direction: column;
   gap: 12px;
   z-index: 1;
-  opacity: 0;
   transform: translateY(10px);
+  opacity: 0;
   pointer-events: none;
   transition: all 0.25s ease;
+}
+.cart-dropdown--active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .cart-dropdown::before {

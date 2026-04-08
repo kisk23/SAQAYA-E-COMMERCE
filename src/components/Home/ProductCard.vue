@@ -61,7 +61,7 @@ export default Vue.extend({
   },
   methods: {
     addToCart() {
-      this.$store.commit('addToCart', this.product)
+      this.$store.commit('cart/addToCart', this.product)
     },
   },
 })
