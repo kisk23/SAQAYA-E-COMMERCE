@@ -1,6 +1,6 @@
 <template>
   <section class="browse__categories">
-    <TodayBadge label="Categories" />
+    <TodayBadge label="Categories" class="categories__badge" />
 
     <h2 class="section-header__title">Browse by Category</h2>
     <div class="categories">
@@ -48,7 +48,7 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top: 84px;
+  margin-top: 48px;
 }
 
 .categories {
@@ -98,5 +98,13 @@ export default Vue.extend({
 .categories__name {
   font-size: 14px;
   text-align: center;
+}
+.categories__badge {
+  margin-left: 19px;
+}
+.section-header__title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 10px;
 }
 </style>
