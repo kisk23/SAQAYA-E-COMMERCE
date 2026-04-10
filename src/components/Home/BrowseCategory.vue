@@ -19,10 +19,10 @@ import Vue from 'vue'
 import TodayBadge from './TodayBadge.vue'
 
 export default Vue.extend({
-  name: 'BrowseByCategory',
+  name: 'BrowseCategory',
   data() {
     return {
-      activeId: null as number | null,
+      activeId: null,
     }
   },
   computed: {

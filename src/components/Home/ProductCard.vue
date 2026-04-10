@@ -17,7 +17,7 @@
         <span class="product-card__price"
           >${{ (product.price * (1 - product.discountPercentage / 100)).toFixed(2) }}</span
         >
-        <span class="product-card__old">${{ product.price?.toFixed(2) }}</span>
+        <span class="product-card__old">${{ product.price.toFixed(2) }}</span>
       </div>
     </div>
     <div class="product-card__rating">
@@ -42,7 +42,7 @@ import Vue, { PropType } from 'vue'
 import type { Product } from '@/types'
 export default Vue.extend({
   props: {
-    //this entire problem PropType<Product> disappears with defineProps.
+    //this entire problem PropType<Product> disappears with defineProps vue3.
     product: {
       type: Object as PropType<Product>,
       required: true,

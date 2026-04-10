@@ -8,7 +8,7 @@ export const getters: GetterTree<CartState, RootState> = {
     return state.cart.map((item: CartItem) => ({
       id: item.product.id,
       title: item.product.title,
-      image: item.product.thumbnail || item.product.images[0] || '',
+      image: item.product.thumbnail ?? item.product.images?.[0] ?? null,
       unitPrice: item.product.price,
       quantity: item.quantity,
       lineTotal: item.product.price * item.quantity,

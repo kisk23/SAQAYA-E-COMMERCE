@@ -2,7 +2,7 @@
   <section>
     <HeroSection />
     <FlashSales />
-    <BrowseByCategory />
+    <BrowseCategory />
     <ExploreProducts />
   </section>
 </template>
@@ -11,7 +11,7 @@
 import Vue from 'vue'
 import HeroSection from '@/components/Home/HeroSection.vue'
 import FlashSales from '@/components/Home/FlashSales.vue'
-import BrowseByCategory from '@/components/Home/BrowseByCategory.vue'
+import BrowseCategory from '@/components/Home/BrowseCategory.vue'
 import ExploreProducts from '@/components/Home/ExploreProducts.vue'
 
 export default Vue.extend({
@@ -19,7 +19,7 @@ export default Vue.extend({
   components: {
     HeroSection,
     FlashSales,
-    BrowseByCategory,
+    BrowseCategory,
     ExploreProducts,
   },
 })

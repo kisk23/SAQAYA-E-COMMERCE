@@ -23,7 +23,7 @@
             <p class="cart-dropdown__name">{{ item.title }}</p>
             <p class="cart-dropdown__meta">
               <span>Qty: {{ item.quantity }}</span>
-              <span>${{ formatPrice(item.unitPrice) }} each</span>
+              <span>{{ formatPrice(item.unitPrice) }} each</span>
             </p>
             <div class="cart-dropdown__controls">
               <button class="cart-dropdown__qty-btn" @click="decrease(item.id)">-</button>
@@ -33,7 +33,7 @@
             </div>
           </div>
 
-          <p class="cart-dropdown__line-total">${{ formatPrice(item.lineTotal) }}</p>
+          <p class="cart-dropdown__line-total">{{ formatPrice(item.lineTotal) }}</p>
         </div>
       </div>
 
@@ -44,7 +44,7 @@
         </p>
         <p class="cart-dropdown__summary-row">
           <span>Total</span>
-          <strong>${{ formatPrice(cartTotal) }}</strong>
+          <strong>{{ formatPrice(cartTotal) }}</strong>
         </p>
       </div>
     </div>
@@ -56,6 +56,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import type { NormalizedCartItem } from '@/types/cart'
+import { formatPrice } from '@/utils/format'
 export default Vue.extend({
   name: 'CartDropdown',
   props: {
@@ -86,9 +87,7 @@ export default Vue.extend({
     remove(productId: number): void {
       this.$store.commit('cart/removeFromCart', productId)
     },
-    formatPrice(value: number): string {
-      return value.toFixed(2)
-    },
+    formatPrice,
   },
 })
 </script>
