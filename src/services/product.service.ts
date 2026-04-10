@@ -1,7 +1,7 @@
-import axios from 'axios'
+import { http } from './http'
 
 export const productService = {
   async getProducts() {
-    return axios.get('https://dummyjson.com/products')
+    return http.get('/products')
   },
 }
