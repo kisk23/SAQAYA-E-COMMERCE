@@ -4,6 +4,7 @@
     <FlashSales />
     <BrowseCategory />
     <ExploreProducts />
+    <FeaturesBar />
   </section>
 </template>
 
@@ -13,6 +14,7 @@ import HeroSection from '@/components/Home/HeroSection.vue'
 import FlashSales from '@/components/Home/FlashSales.vue'
 import BrowseCategory from '@/components/Home/BrowseCategory.vue'
 import ExploreProducts from '@/components/Home/ExploreProducts.vue'
+import FeaturesBar from '@/components/Home/FeaturesBar.vue'
 
 export default Vue.extend({
   name: 'HomeView',
@@ -21,6 +23,7 @@ export default Vue.extend({
     FlashSales,
     BrowseCategory,
     ExploreProducts,
+    FeaturesBar,
   },
 })
 </script>
