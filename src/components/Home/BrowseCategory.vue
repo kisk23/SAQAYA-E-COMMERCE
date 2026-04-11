@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import TodayBadge from './TodayBadge.vue'
+import TodayBadge from '@/components/shared/TodayBadge.vue'
 
 export default Vue.extend({
   name: 'BrowseCategory',
