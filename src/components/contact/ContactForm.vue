@@ -2,11 +2,41 @@
   <div class="contact-form">
     <form @submit.prevent="submitForm">
       <div class="contact-form__row">
-        <input type="text" placeholder="Your Name *" class="contact-form__input" />
-        <input type="email" placeholder="Your Email *" class="contact-form__input" />
+        <div class="contact-form__field">
+          <input
+            v-model="form.name"
+            type="text"
+            placeholder="Your Name *"
+            class="contact-form__input"
+          />
+          <span v-if="errors.name" class="contact-form__error">
+            {{ errors.name }}
+          </span>
+        </div>
+
+        <div class="contact-form__field">
+          <input
+            v-model="form.email"
+            type="email"
+            placeholder="Your Email *"
+            class="contact-form__input"
+          />
+          <span v-if="errors.email" class="contact-form__error">
+            {{ errors.email }}
+          </span>
+        </div>
       </div>
 
-      <textarea placeholder="Your Message" class="contact-form__textarea"></textarea>
+      <div class="contact-form__field">
+        <textarea
+          v-model="form.message"
+          placeholder="Your Message *"
+          class="contact-form__textarea"
+        ></textarea>
+        <span v-if="errors.message" class="contact-form__error">
+          {{ errors.message }}
+        </span>
+      </div>
 
       <div class="contact-form__actions">
         <button class="contact-form__button" type="submit">Send Message</button>
@@ -17,12 +47,37 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { validateContactForm } from '@/services/validation.service'
+import type { ValidationErrors } from '@/types/validation'
 
 export default Vue.extend({
   name: 'ContactForm',
+  data() {
+    return {
+      form: {
+        name: '',
+        email: '',
+        message: '',
+      },
+      errors: {} as ValidationErrors,
+    }
+  },
   methods: {
     submitForm() {
+      const { isValid, errors } = validateContactForm(this.form)
+
+      this.errors = errors
+
+      if (!isValid) return
+
       alert('Form submitted!')
+
+      this.form = {
+        name: '',
+        email: '',
+        message: '',
+      }
+      this.errors = {}
     },
   },
 })
@@ -71,6 +126,17 @@ export default Vue.extend({
   justify-content: flex-end;
 }
 
+.contact-form__field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form__error {
+  color: red;
+  font-size: 11px;
+  margin-top: 4px;
+}
 @media (max-width: 768px) {
   .contact-form__row {
     flex-direction: column;
