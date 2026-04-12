@@ -34,6 +34,7 @@ export default Vue.extend({
 .breadcrumbs {
   font-size: 12px;
   color: #777;
+  margin-bottom: 20px;
 }
 
 .breadcrumbs__item {

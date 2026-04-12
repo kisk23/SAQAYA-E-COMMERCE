@@ -5,16 +5,28 @@ import { productService } from '@/services/product.service'
 
 export const actions: ActionTree<ProductState, RootState> = {
   async fetchProducts({ state, commit }) {
-    if (state.products.length || state.loading) return
+    if (state.loading || !state.hasMore) return
 
     commit('setLoading', true)
 
     try {
-      const response = await productService.getProducts()
-      console.log('products ' + response.data)
-      commit('setProducts', response.data.products)
+      const data = await productService.getProducts(state.limit, (state.page - 1) * state.limit)
+
+      if (!data.products.length) {
+        commit('setHasMore', false)
+      } else {
+        commit('addProducts', data.products)
+      }
+
+      console.log('products:', data.products)
+    } catch (err) {
+      console.error('Fetch failed:', err)
     } finally {
       commit('setLoading', false)
     }
+  },
+  async loadMore({ commit, dispatch }) {
+    commit('incrementPage')
+    await dispatch('fetchProducts')
   },
 }

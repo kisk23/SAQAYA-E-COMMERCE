@@ -1,7 +1,14 @@
 import { http } from './http'
 
 export const productService = {
-  async getProducts() {
-    return http.get('/products')
+  async getProducts(limit?: number, skip?: number) {
+    const res = await http.get('/products', {
+      params: {
+        limit,
+        skip,
+      },
+    })
+
+    return res.data
   },
 }
