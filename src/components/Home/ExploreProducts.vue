@@ -36,8 +36,8 @@ import 'swiper/css/grid'
 import type { Product } from '@/types'
 import Vue from 'vue'
 import TodayBadge from '@/components/shared/TodayBadge.vue'
-import SectionHeader from '@/components/Home/SectionHeader.vue'
-import ProductCard from '@/components/Home/ProductCard.vue'
+import SectionHeader from '@/components/home/SectionHeader.vue'
+import ProductCard from '@/components/shared/ProductCard.vue'
 
 export default Vue.extend({
   name: 'ExploreProducts',

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import ProductCard from '@/components/Home/ProductCard.vue'
+import ProductCard from '@/components/shared/ProductCard.vue'
 import type { Product } from '@/types'
 
 export default Vue.extend({

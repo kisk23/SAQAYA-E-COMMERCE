@@ -3,7 +3,17 @@
     <div class="product-card__image">
       <slot name="discount-badge"> </slot>
 
-      <img :src="product.thumbnail" :alt="`Product image: ${product.title}`" />
+      <img :src="product.thumbnail" :alt="`Product image: ${product.title}`" @click="goToProduct" />
+
+      <div class="product-card__top-actions">
+        <button class="icon-btn">
+          <img src="@/assets/icons/heart.svg" alt="heart" />
+        </button>
+
+        <button class="icon-btn">
+          <img src="@/assets/icons/eye.svg" alt="eye" />
+        </button>
+      </div>
 
       <div class="product-card__actions">
         <button @click="addToCart">Add to Cart</button>
@@ -62,6 +72,9 @@ export default Vue.extend({
   methods: {
     addToCart() {
       this.$store.commit('cart/addToCart', this.product)
+    },
+    goToProduct() {
+      this.$router.push(`/products/${this.product.id}`)
     },
   },
 })
@@ -166,5 +179,34 @@ export default Vue.extend({
   font-size: 13px;
   color: #888;
   margin-top: -4px;
+}
+.product-card__top-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon-btn img {
+  width: 16px;
+  height: 16px;
 }
 </style>
