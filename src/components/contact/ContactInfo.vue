@@ -43,7 +43,7 @@ export default Vue.extend({
 
 <style scoped>
 .contact-info {
-  width: 564px;
+  width: 100%;
   background: #ffffff;
   box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.05);
   border-radius: 4px;

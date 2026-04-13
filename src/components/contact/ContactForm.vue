@@ -86,7 +86,6 @@ export default Vue.extend({
 <style scoped>
 .contact-form {
   background: #fff;
-  padding: 20px;
 }
 
 .contact-form__row {

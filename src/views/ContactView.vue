@@ -34,47 +34,59 @@ export default Vue.extend({
   },
 })
 </script>
-
 <style scoped>
 .contact {
   max-width: 1200px;
   margin: auto;
   margin-block: 40px;
+  padding: 0 16px;
 }
 
 .contact__container {
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  margin: 20px 0px;
+  gap: 24px;
 }
 
 .contact__image {
-  flex: 0 0 400px;
+  flex: 1.2;
+}
+
+.contact__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
 }
 
 .contact__right {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 564px;
 }
 
-.contact-info {
-  background: #fff;
-  box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  padding: 24px;
-}
-
-.contact-form {
-  background: #fff;
-  box-shadow: 0px 1px 13px rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  padding: 24px;
-}
 .contact__breadcrumbs {
   margin-bottom: 20px;
-  margin-left: 20px;
+}
+
+@media (max-width: 1024px) {
+  .contact__image {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact {
+    margin-block: 20px;
+  }
+
+  .contact__container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .contact__right {
+    gap: 16px;
+  }
 }
 </style>

@@ -16,6 +16,7 @@ export const mutations: MutationTree<CartState> = {
   incrementCartItem(state, productId: number) {
     const item = state.cart.find((entry) => entry.product.id === productId)
     if (item) item.quantity += 1
+    saveCart(state.cart)
   },
   decreaseCartItem(state, productId: number) {
     const itemIndex = state.cart.findIndex((entry) => entry.product.id === productId)
@@ -27,11 +28,13 @@ export const mutations: MutationTree<CartState> = {
     } else {
       state.cart.splice(itemIndex, 1)
     }
+    saveCart(state.cart)
   },
   removeFromCart(state, productId: number) {
     const itemIndex = state.cart.findIndex((entry) => entry.product.id === productId)
     if (itemIndex !== -1) {
       state.cart.splice(itemIndex, 1)
     }
+    saveCart(state.cart)
   },
 }
