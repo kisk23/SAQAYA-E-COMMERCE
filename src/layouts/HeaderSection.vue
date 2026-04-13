@@ -5,13 +5,20 @@
         <span class="header__brand">Exclusive</span>
       </div>
 
-      <nav class="header__nav">
-        <router-link class="header__link" to="/">Home</router-link>
-        <router-link class="header__link" to="/contact">Contact</router-link>
-        <router-link class="header__link" to="/about">About</router-link>
+      <nav :class="['header__nav', { 'header__nav--open': isMenuOpen }]">
+        <router-link class="header__link" to="/" @click.native="closeMenu">Home</router-link>
+        <router-link class="header__link" to="/contact" @click.native="closeMenu"
+          >Contact</router-link
+        >
+        <router-link class="header__link" to="/about" @click.native="closeMenu">About</router-link>
       </nav>
 
       <div class="header__actions">
+        <button class="header__hamburger" @click="toggleMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
         <div class="header__search">
           <input class="header__input" type="text" placeholder="What are you looking for?" />
           <button class="header__search-btn">
@@ -49,6 +56,7 @@ export default Vue.extend({
   data() {
     return {
       isCartOpen: false,
+      isMenuOpen: false,
     }
   },
 
@@ -60,6 +68,12 @@ export default Vue.extend({
   methods: {
     toggleCart() {
       this.isCartOpen = !this.isCartOpen
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen
+    },
+    closeMenu() {
+      this.isMenuOpen = false
     },
   },
 })
@@ -80,6 +94,7 @@ export default Vue.extend({
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
+  position: relative;
 }
 
 .header__logo {
@@ -93,10 +108,15 @@ export default Vue.extend({
 }
 
 .header__nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  padding: 1rem 1.5rem;
   display: none;
-  align-items: center;
-  gap: 2rem;
-  margin-left: 20%;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .header__link {
@@ -195,10 +215,40 @@ export default Vue.extend({
   position: relative;
   padding-bottom: 8px;
 }
+.header__hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.header__hamburger span {
+  width: 20px;
+  height: 2px;
+  background: #111827;
+}
+.header__nav--open {
+  display: flex;
+}
 
 @media (min-width: 768px) {
+  .header__hamburger {
+    display: none;
+  }
+
   .header__nav {
-    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    display: flex !important;
+    flex-direction: row;
+    gap: 2rem;
+    width: auto;
+    background: transparent;
+    padding: 0;
   }
 }
 
