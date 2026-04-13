@@ -8,3 +8,10 @@ export interface ContactForm {
   email: string
   message: string
 }
+
+export interface Member {
+  id: number
+  name: string
+  role: string
+  image: string
+}

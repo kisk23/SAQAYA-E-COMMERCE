@@ -3,3 +3,5 @@ export type { Product } from './product'
 export type { RootState } from './store'
 
 export type { Category } from './category'
+
+export type { ContactForm, ValidationErrors, Member } from './validation'
