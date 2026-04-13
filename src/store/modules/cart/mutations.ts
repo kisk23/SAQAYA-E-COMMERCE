@@ -1,6 +1,7 @@
 import { MutationTree } from 'vuex'
 import { Product } from '@/types'
 import { CartState } from './state'
+import { saveCart } from './cartStorage'
 
 export const mutations: MutationTree<CartState> = {
   addToCart(state, product: Product) {
@@ -10,6 +11,7 @@ export const mutations: MutationTree<CartState> = {
     } else {
       state.cart.push({ product, quantity: 1 })
     }
+    saveCart(state.cart)
   },
   incrementCartItem(state, productId: number) {
     const item = state.cart.find((entry) => entry.product.id === productId)

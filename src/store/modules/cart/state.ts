@@ -5,5 +5,5 @@ export interface CartState {
 }
 
 export const state: CartState = {
-  cart: [],
+  cart: JSON.parse(localStorage.getItem('cart') || '[]'),
 }
