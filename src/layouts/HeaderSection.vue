@@ -32,7 +32,7 @@
             <span class="header__badge">{{ cartCount }}</span>
           </button>
 
-          <CartDropdown :isOpen="isCartOpen" @click.stop />
+          <CartDrawer :isOpen="isCartOpen" @close="isCartOpen = false" />
         </div>
       </div>
     </div>
@@ -41,11 +41,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import CartDropdown from '@/components/CartDropdown.vue'
+import CartDrawer from '@/components/CartDrawer.vue'
 
 export default Vue.extend({
   name: 'HeaderSection',
-  components: { CartDropdown },
+  components: { CartDrawer },
   data() {
     return {
       isCartOpen: false,
