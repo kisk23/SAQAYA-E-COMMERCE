@@ -3,8 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import '@fortawesome/fontawesome-free/css/all.min.css'
+import './assets/styles/main.css'
 
-Vue.config.productionTip = false // Disable the production tip on Vue startup
+Vue.config.productionTip = false
 
 new Vue({
   router,

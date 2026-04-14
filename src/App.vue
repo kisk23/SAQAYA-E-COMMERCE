@@ -13,23 +13,3 @@ export default Vue.extend({
   components: {},
 })
 </script>
-
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: system-ui, sans-serif;
-
-  line-height: 1.5;
-
-  background: #fff !important;
-  color: #000 !important;
-}
-html {
-  color-scheme: light;
-}
-</style>

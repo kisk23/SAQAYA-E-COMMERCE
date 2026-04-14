@@ -12,6 +12,6 @@ export const state: ProductState = {
   products: [],
   page: 1,
   loading: false,
-  limit: 10,
+  limit: 12,
   hasMore: true,
 }

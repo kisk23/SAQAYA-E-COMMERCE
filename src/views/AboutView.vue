@@ -1,5 +1,9 @@
 <template>
-  <section>
+  <section class="about">
+    <BreadCrumbs
+      :items="[{ label: 'Home', link: '/' }, { label: 'About' }]"
+      class="about__breadcrumbs"
+    />
     <AboutHeader />
     <StatsSection :items="stats" />
     <TeamCarousel />
@@ -11,6 +15,7 @@
 import AboutHeader from '@/components/about/AboutHeader.vue'
 import StatsSection from '@/components/about/StatsSection.vue'
 import TeamCarousel from '@/components/about/TeamCarousel.vue'
+import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
 import FeaturesBar from '@/components/shared/FeaturesBar.vue'
 
 import Vue from 'vue'
@@ -21,6 +26,7 @@ export default Vue.extend({
     FeaturesBar,
     StatsSection,
     TeamCarousel,
+    BreadCrumbs,
   },
   data: function () {
     return {
@@ -51,3 +57,15 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style scoped>
+.about {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.about__breadcrumbs {
+  margin: 40px;
+}
+</style>
