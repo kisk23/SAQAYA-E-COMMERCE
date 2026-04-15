@@ -45,9 +45,9 @@
         :key="n"
         viewBox="0 0 16 16"
         class="product-card__star"
-        :class="{ 'product-card__star--filled': n <= Math.round(averageRating) }"
+        :class="{ 'product-card__star--filled': n <= filledStars }"
         data-testid="star"
-        :data-filled="n <= Math.round(averageRating)"
+        :data-filled="n <= filledStars"
       >
         <path
           d="M13.9464 6.83189C15.0171 6.022 14.4444 4.31533 13.1018 4.31533H10.6727C10.0587 4.31533 9.51645 3.91536 9.33512 3.32884L8.61098 0.98653C8.20433 -0.328787 6.34254 -0.328787 5.9359 0.98653L5.21175 3.32884C5.03042 3.91536 4.48813 4.31533 3.87421 4.31533H1.40305C0.0648563 4.31533 -0.510644 6.01289 0.551656 6.82669L2.66813 8.44808C3.13229 8.80365 3.32658 9.41024 3.1554 9.96932L2.3864 12.4809C1.9876 13.7834 3.49511 14.8305 4.57645 14.0021L6.42205 12.5882C6.92441 12.2034 7.62247 12.2034 8.12483 12.5882L9.95413 13.9896C11.037 14.8192 12.546 13.768 12.1431 12.4648L11.3634 9.94286C11.1894 9.37991 11.3864 8.76824 11.8564 8.41278L13.9464 6.83189Z"
@@ -70,18 +70,14 @@ export default Vue.extend({
       type: Object as PropType<Product>,
       required: true,
     },
-  },
 
+  },
   computed: {
-    averageRating(): number {
-      const reviews = this.product.reviews || []
+  filledStars(): number {
+    return Math.floor(this.product.rating)
+  }
+},
 
-      if (!reviews.length) return 0
-
-      const total = reviews.reduce((sum, r) => sum + r.rating, 0)
-      return total / reviews.length
-    },
-  },
   methods: {
     addToCart() {
       this.$store.commit('cart/addToCart', this.product)
@@ -164,13 +160,6 @@ export default Vue.extend({
 }
 .product-card__image:hover .product-card__actions button {
   opacity: 1;
-}
-.product-card__rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  font-size: 13px;
 }
 
 .product-card__star {
