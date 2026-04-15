@@ -9,7 +9,11 @@
       />
     </div>
 
-    <div ref="exploreProductsSwiper" class="swiper explore-products__swiper">
+    <p v-if="loading && !products.length" class="explore-products__state">Loading products...</p>
+
+    <p v-else-if="!products.length" class="explore-products__state">No products available.</p>
+
+    <div v-else ref="exploreProductsSwiper" class="swiper explore-products__swiper">
       <div class="swiper-wrapper">
         <div
           v-for="product in products"
@@ -21,7 +25,7 @@
       </div>
     </div>
 
-    <div class="explore-products__footer">
+    <div v-if="products.length" class="explore-products__footer">
       <router-link to="/products" class="explore-products__button">View All Products</router-link>
     </div>
     <div class="section-divider"></div>
@@ -50,6 +54,9 @@ export default Vue.extend({
   computed: {
     products(): Product[] {
       return this.$store.getters['product/products']
+    },
+    loading(): boolean {
+      return this.$store.state.product.loading
     },
   },
   created() {
@@ -131,6 +138,11 @@ export default Vue.extend({
 
 .explore-products__swiper {
   margin: 20px 20px 40px;
+}
+
+.explore-products__state {
+  margin: 20px;
+  color: #6b7280;
 }
 
 .explore-products__slide {

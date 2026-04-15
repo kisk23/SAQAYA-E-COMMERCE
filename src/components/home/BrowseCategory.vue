@@ -3,7 +3,9 @@
     <TodayBadge label="Categories" class="categories__badge" />
 
     <h2 class="section-header__title">Browse by Category</h2>
-    <div class="categories">
+    <p v-if="loading" class="categories__state">Loading categories...</p>
+
+    <div v-else-if="mappedCategories.length" class="categories">
       <div v-for="category in mappedCategories" :key="category.id" class="categories__item">
         <div class="categories__icon">
           <img :src="category.icon" :alt="category.name" />
@@ -11,6 +13,8 @@
         <p class="categories__name">{{ category.name }}</p>
       </div>
     </div>
+
+    <p v-else class="categories__state">No categories available.</p>
   </section>
 </template>
 
@@ -28,6 +32,9 @@ export default Vue.extend({
   computed: {
     mappedCategories() {
       return this.$store.getters['category/mappedCategories']
+    },
+    loading() {
+      return this.$store.state.category.loading
     },
   },
   components: {
@@ -57,6 +64,11 @@ export default Vue.extend({
   gap: 20px;
   margin-top: 48px;
   max-width: 1100;
+}
+
+.categories__state {
+  margin-top: 24px;
+  color: #6b7280;
 }
 
 .categories__item {

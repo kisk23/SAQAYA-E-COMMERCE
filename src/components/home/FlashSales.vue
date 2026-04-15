@@ -9,7 +9,11 @@
       />
     </div>
 
-    <div ref="flashSalesSwiper" class="swiper flash-sales__swiper">
+    <p v-if="loading && !products.length" class="flash-sales__state">Loading products...</p>
+
+    <p v-else-if="!products.length" class="flash-sales__state">No products available.</p>
+
+    <div v-else ref="flashSalesSwiper" class="swiper flash-sales__swiper">
       <div class="swiper-wrapper">
         <div v-for="product in products" :key="product.id" class="swiper-slide flash-sales__slide">
           <ProductCard :product="product">
@@ -21,7 +25,7 @@
       </div>
     </div>
 
-    <div class="flash-sales__footer">
+    <div v-if="products.length" class="flash-sales__footer">
       <router-link to="/products" class="flash-sales__button">View All Products</router-link>
     </div>
     <div class="section-divider"></div>
@@ -48,6 +52,9 @@ export default Vue.extend({
   computed: {
     products(): Product[] {
       return this.$store.getters['product/products']
+    },
+    loading(): boolean {
+      return this.$store.state.product.loading
     },
   },
   created() {
@@ -107,6 +114,11 @@ export default Vue.extend({
 
 .flash-sales__swiper {
   margin: 20px 20px 40px;
+}
+
+.flash-sales__state {
+  margin: 20px;
+  color: #6b7280;
 }
 
 .flash-sales__slide {
