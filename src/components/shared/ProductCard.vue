@@ -82,7 +82,16 @@ export default Vue.extend({
       this.$store.commit('cart/addToCart', this.product)
     },
     goToProduct() {
-      this.$router.push(`/products/${this.product.id}`)
+      const fromPath = this.$route.fullPath
+      const fromLabel = this.$route.name === 'products' ? 'Products' : 'Home'
+
+      this.$router.push({
+        path: `/products/${this.product.id}`,
+        query: {
+          from: fromPath,
+          fromLabel,
+        },
+      })
     },
   },
 })

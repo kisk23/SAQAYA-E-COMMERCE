@@ -1,12 +1,6 @@
 <template>
   <section class="product-view">
-    <BreadCrumbs
-      :items="[
-        { label: 'Home', link: '/' },
-        { label: 'Products', link: '/products' },
-        { label: product?.title, link: `/products/${product?.id}` },
-      ]"
-    />
+    <BreadCrumbs :items="productBreadcrumbs" />
 
     <p v-if="loading" class="product-view__state">Loading product...</p>
 
@@ -26,6 +20,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import type { Product } from '@/types'
+import type { BreadcrumbItem } from '@/types/breadcrumb'
 import ProductMain from '@/components/product-detail/ProductMain.vue'
 import ProductInfo from '@/components/product-detail/ProductInfo.vue'
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
@@ -46,6 +41,25 @@ export default Vue.extend({
       error: false,
       product: null,
     }
+  },
+
+  computed: {
+    productBreadcrumbs(): BreadcrumbItem[] {
+      const fromPath =
+        typeof this.$route.query.from === 'string' ? this.$route.query.from : '/products'
+      const fromLabel =
+        typeof this.$route.query.fromLabel === 'string' ? this.$route.query.fromLabel : 'Products'
+
+      const breadcrumbs: BreadcrumbItem[] = [{ label: 'Home', link: '/' }]
+
+      if (fromPath !== '/') {
+        breadcrumbs.push({ label: fromLabel, link: fromPath })
+      }
+
+      breadcrumbs.push({ label: this.product?.title || 'Product' })
+
+      return breadcrumbs
+    },
   },
 
   async created() {

@@ -1,6 +1,6 @@
 <template>
   <section class="products">
-    <BreadCrumbs :items="[{ label: 'Home', link: '/' }, { label: 'Products' }]" />
+    <BreadCrumbs :items="productsBreadcrumbs" />
 
     <ProductsHeader @change="handleSortChange" />
 
@@ -21,6 +21,11 @@ import ProductsList from '@/components/product/ProductList.vue'
 import LoadMoreButton from '@/components/product/LoadMore.vue'
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
 import type { Product } from '@/types'
+import type { BreadcrumbItem } from '@/types/breadcrumb'
+
+const SORT_OPTIONS = ['Highest Rating', 'Price: Low to High', 'Price: High to Low'] as const
+
+type SortOption = (typeof SORT_OPTIONS)[number]
 
 export default Vue.extend({
   name: 'ProductsView',
@@ -34,11 +39,19 @@ export default Vue.extend({
 
   data() {
     return {
-      sortBy: 'Highest Rating',
+      sortBy: 'Highest Rating' as SortOption,
     }
   },
 
   computed: {
+    productsBreadcrumbs(): BreadcrumbItem[] {
+      const homePath =
+        typeof this.$route.query.homePath === 'string' ? this.$route.query.homePath : '/'
+      const homeLabel =
+        typeof this.$route.query.homeLabel === 'string' ? this.$route.query.homeLabel : 'Home'
+
+      return [{ label: homeLabel, link: homePath }, { label: 'Products' }]
+    },
     products(): Product[] {
       return this.$store.state.product.products as Product[]
     },
@@ -64,9 +77,25 @@ export default Vue.extend({
   },
 
   created() {
+    const querySort = this.$route.query.sort
+    if (this.isSortOption(querySort)) {
+      this.sortBy = querySort
+    }
+
     if (!this.products.length) {
       this.$store.dispatch('product/fetchProducts')
     }
+  },
+
+  watch: {
+    '$route.query.sort': {
+      immediate: false,
+      handler(value: unknown) {
+        if (this.isSortOption(value)) {
+          this.sortBy = value
+        }
+      },
+    },
   },
 
   methods: {
@@ -74,7 +103,20 @@ export default Vue.extend({
       this.$store.dispatch('product/loadMore')
     },
     handleSortChange(option: string) {
+      if (!this.isSortOption(option)) return
+
       this.sortBy = option
+      this.$router
+        .replace({
+          query: {
+            ...this.$route.query,
+            sort: option,
+          },
+        })
+        .catch(() => undefined)
+    },
+    isSortOption(value: unknown): value is SortOption {
+      return typeof value === 'string' && (SORT_OPTIONS as readonly string[]).includes(value)
     },
   },
 })
