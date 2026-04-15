@@ -70,13 +70,12 @@ export default Vue.extend({
       type: Object as PropType<Product>,
       required: true,
     },
-
   },
   computed: {
-  filledStars(): number {
-    return Math.floor(this.product.rating)
-  }
-},
+    filledStars(): number {
+      return Math.floor(this.product.rating)
+    },
+  },
 
   methods: {
     addToCart() {

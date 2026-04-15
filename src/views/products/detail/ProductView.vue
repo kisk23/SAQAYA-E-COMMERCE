@@ -29,6 +29,7 @@ import type { Product } from '@/types'
 import ProductMain from '@/components/product-detail/ProductMain.vue'
 import ProductInfo from '@/components/product-detail/ProductInfo.vue'
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
+import { productService } from '@/services/product.service'
 
 export default Vue.extend({
   name: 'ProductView',
@@ -39,22 +40,15 @@ export default Vue.extend({
     BreadCrumbs,
   },
 
-  data() {
+  data(): { loading: boolean; error: boolean; product: Product | null } {
     return {
       loading: false,
       error: false,
+      product: null,
     }
   },
 
-  computed: {
-    product(): Product | null {
-      const id = Number(this.$route.params.id)
-      return this.$store.getters['product/getProductById'](id) || null
-    },
-  },
-
   async created() {
-    if (this.product) return
     await this.fetchProduct()
   },
 
@@ -62,7 +56,6 @@ export default Vue.extend({
     '$route.params.id': {
       immediate: false,
       handler() {
-        if (this.product) return
         this.fetchProduct()
       },
     },
@@ -70,11 +63,19 @@ export default Vue.extend({
 
   methods: {
     async fetchProduct(): Promise<void> {
+      const id = Number(this.$route.params.id)
+      if (!Number.isFinite(id) || id <= 0) {
+        this.product = null
+        this.error = false
+        return
+      }
+
       this.loading = true
       this.error = false
       try {
-        await this.$store.dispatch('product/fetchProducts')
+        this.product = await productService.getProductById(id)
       } catch (e) {
+        this.product = null
         this.error = true
       } finally {
         this.loading = false
