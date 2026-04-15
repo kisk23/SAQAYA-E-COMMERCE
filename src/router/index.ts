@@ -8,8 +8,7 @@ import ContactView from '@/views/ContactView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import ProductsView from '@/views/products/list/ProductsView.vue'
 import ProductView from '@/views/products/detail/ProductView.vue'
-
-import store from '../store'
+import { ensureProductsLoaded } from './guards'
 
 Vue.use(VueRouter)
 
@@ -22,23 +21,13 @@ const routes: Array<RouteConfig> = [
         path: '',
         name: 'home',
         component: HomeView,
-        beforeEnter: async (to, from, next) => {
-          if (!store.getters['product/products'].length) {
-            await store.dispatch('product/fetchProducts')
-          }
-          next()
-        },
+        beforeEnter: ensureProductsLoaded,
       },
       {
         path: 'products',
         name: 'products',
         component: ProductsView,
-        beforeEnter: async (to, from, next) => {
-          if (!store.getters['product/products'].length) {
-            await store.dispatch('product/fetchProducts')
-          }
-          next()
-        },
+        beforeEnter: ensureProductsLoaded,
       },
       {
         path: 'products/:id',

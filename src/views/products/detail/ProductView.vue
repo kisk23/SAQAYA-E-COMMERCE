@@ -62,33 +62,32 @@ export default Vue.extend({
     },
   },
 
-  async created() {
-    await this.fetchProduct()
+  created() {
+    this.fetchProductByRouteParam(this.$route.params.id)
   },
 
-  watch: {
-    '$route.params.id': {
-      immediate: false,
-      handler() {
-        this.fetchProduct()
-      },
-    },
+  async beforeRouteUpdate(to, _from, next) {
+    await this.fetchProductByRouteParam(to.params.id)
+    next()
   },
 
   methods: {
-    async fetchProduct(): Promise<void> {
-      const id = Number(this.$route.params.id)
+    async fetchProductByRouteParam(rawId: string | number): Promise<void> {
+      const id = Number(rawId)
+
       if (!Number.isFinite(id) || id <= 0) {
         this.product = null
         this.error = false
+        this.loading = false
         return
       }
 
       this.loading = true
       this.error = false
+
       try {
         this.product = await productService.getProductById(id)
-      } catch (e) {
+      } catch {
         this.product = null
         this.error = true
       } finally {
