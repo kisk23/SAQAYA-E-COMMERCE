@@ -1,9 +1,16 @@
 <template>
   <div class="product-card">
     <div class="product-card__image">
-      <slot name="discount-badge"> </slot>
+      <div data-testid="discount-badge">
+        <slot name="discount-badge"></slot>
+      </div>
 
-      <img :src="product.thumbnail" :alt="`Product image: ${product.title}`" @click="goToProduct" />
+      <img
+        :src="product.thumbnail"
+        :alt="`Product image: ${product.title}`"
+        @click="goToProduct"
+        data-testid="product-image"
+      />
 
       <div class="product-card__top-actions">
         <button class="icon-btn">
@@ -16,18 +23,20 @@
       </div>
 
       <div class="product-card__actions">
-        <button @click="addToCart">Add to Cart</button>
+        <button @click="addToCart" data-testid="add-to-cart">Add to Cart</button>
       </div>
     </div>
 
     <div class="product-card__info">
-      <p class="product-card__name">{{ product.title }}</p>
+      <p class="product-card__name" data-testid="product-name">{{ product.title }}</p>
 
       <div class="product-card__prices">
-        <span class="product-card__price"
+        <span class="product-card__price" data-testid="product-price"
           >${{ (product.price * (1 - product.discountPercentage / 100)).toFixed(2) }}</span
         >
-        <span class="product-card__old">${{ product.price.toFixed(2) }}</span>
+        <span class="product-card__old" data-testid="product-old-price"
+          >${{ product.price.toFixed(2) }}</span
+        >
       </div>
     </div>
     <div class="product-card__rating">
@@ -37,12 +46,16 @@
         viewBox="0 0 16 16"
         class="product-card__star"
         :class="{ 'product-card__star--filled': n <= Math.round(averageRating) }"
+        data-testid="star"
+        :data-filled="n <= Math.round(averageRating)"
       >
         <path
           d="M13.9464 6.83189C15.0171 6.022 14.4444 4.31533 13.1018 4.31533H10.6727C10.0587 4.31533 9.51645 3.91536 9.33512 3.32884L8.61098 0.98653C8.20433 -0.328787 6.34254 -0.328787 5.9359 0.98653L5.21175 3.32884C5.03042 3.91536 4.48813 4.31533 3.87421 4.31533H1.40305C0.0648563 4.31533 -0.510644 6.01289 0.551656 6.82669L2.66813 8.44808C3.13229 8.80365 3.32658 9.41024 3.1554 9.96932L2.3864 12.4809C1.9876 13.7834 3.49511 14.8305 4.57645 14.0021L6.42205 12.5882C6.92441 12.2034 7.62247 12.2034 8.12483 12.5882L9.95413 13.9896C11.037 14.8192 12.546 13.768 12.1431 12.4648L11.3634 9.94286C11.1894 9.37991 11.3864 8.76824 11.8564 8.41278L13.9464 6.83189Z"
         />
       </svg>
-      <span class="product-card__reviews">({{ product.reviews.length }})</span>
+      <span class="product-card__reviews" data-testid="review-count"
+        >({{ product.reviews.length }})</span
+      >
     </div>
   </div>
 </template>
