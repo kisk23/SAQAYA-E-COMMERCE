@@ -2,11 +2,13 @@
   <section class="products">
     <BreadCrumbs :items="[{ label: 'Home', link: '/' }, { label: 'Products' }]" />
 
-    <ProductsHeader />
+    <ProductsHeader @change="handleSortChange" />
 
-    <ProductsList :products="products" />
+    <ProductsList :products="sortedProducts" />
 
-    <div v-if="!products.length && !loading" class="products__empty">No products available</div>
+    <div v-if="!sortedProducts.length && !loading" class="products__empty">
+      No products available
+    </div>
 
     <LoadMoreButton v-if="hasMore" :loading="loading" @click="loadMore" />
   </section>
@@ -18,6 +20,7 @@ import ProductsHeader from '@/components/product/ProductHeader.vue'
 import ProductsList from '@/components/product/ProductList.vue'
 import LoadMoreButton from '@/components/product/LoadMore.vue'
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
+import type { Product } from '@/types'
 
 export default Vue.extend({
   name: 'ProductsView',
@@ -29,9 +32,28 @@ export default Vue.extend({
     BreadCrumbs,
   },
 
+  data() {
+    return {
+      sortBy: 'Highest Rating',
+    }
+  },
+
   computed: {
-    products() {
-      return this.$store.state.product.products
+    products(): Product[] {
+      return this.$store.state.product.products as Product[]
+    },
+    sortedProducts(): Product[] {
+      const sorted = [...this.products]
+
+      if (this.sortBy === 'Price: Low to High') {
+        return sorted.sort((a, b) => a.price - b.price)
+      }
+
+      if (this.sortBy === 'Price: High to Low') {
+        return sorted.sort((a, b) => b.price - a.price)
+      }
+
+      return sorted.sort((a, b) => b.rating - a.rating)
     },
     loading() {
       return this.$store.state.product.loading
@@ -50,6 +72,9 @@ export default Vue.extend({
   methods: {
     loadMore() {
       this.$store.dispatch('product/loadMore')
+    },
+    handleSortChange(option: string) {
+      this.sortBy = option
     },
   },
 })

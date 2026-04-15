@@ -32,14 +32,7 @@ export default Vue.extend({
     return {
       open: false,
       selected: 'Highest Rating',
-      options: [
-        'Highest Rating',
-        'Price: Low to High',
-        'Price: High to Low',
-        'Discount percentage',
-        'Brand',
-        'Category',
-      ],
+      options: ['Highest Rating', 'Price: Low to High', 'Price: High to Low'],
     }
   },
 
