@@ -39,7 +39,7 @@
 
               <div class="cart-drawer__controls">
                 <button @click="decrease(item.id)" data-test="decrease">−</button>
-                <span>{{ item.quantity }}</span>
+                <span data-test="quantity">{{ item.quantity }}</span>
                 <button @click="increase(item.id)" data-test="increase">+</button>
               </div>
 
@@ -54,12 +54,12 @@
           </div>
         </div>
 
-        <div class="cart-drawer__summary">
-          <div class="cart-drawer__row">
+        <div class="cart-drawer__summary" ata-test="summary-total" data-test="summary-total">
+          <div class="cart-drawer__row" data-test="subtotal">
             <span>Subtotal</span>
             <strong>{{ formatPrice(cartTotal) }}</strong>
           </div>
-          <div class="cart-drawer__row">
+          <div class="cart-drawer__row" data-test="shipping">
             <span>Shipping</span>
             <strong>Free</strong>
           </div>
@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <button class="cart-drawer__checkout">Place Order</button>
+        <button class="cart-drawer__checkout" data-test="checkout">Place Order</button>
       </div>
     </aside>
   </div>

@@ -13,3 +13,7 @@ export interface NormalizedCartItem {
   quantity: number
   lineTotal: number
 }
+
+export interface CartState {
+  cart: CartItem[]
+}
