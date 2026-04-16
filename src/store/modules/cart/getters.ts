@@ -1,7 +1,6 @@
 import { GetterTree } from 'vuex'
-import { CartState } from './state'
 import { RootState } from '@/types'
-import { CartItem, NormalizedCartItem } from '@/types/cart'
+import { CartItem, CartState, NormalizedCartItem } from '@/types/cart'
 
 export const getters: GetterTree<CartState, RootState> = {
   cartItems(state): NormalizedCartItem[] {

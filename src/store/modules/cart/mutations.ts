@@ -1,6 +1,6 @@
 import { MutationTree } from 'vuex'
 import { Product } from '@/types'
-import { CartState } from './state'
+import type { CartState } from '@/types/cart'
 import { saveCart } from './cartStorage'
 
 export const mutations: MutationTree<CartState> = {

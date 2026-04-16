@@ -1,6 +1,7 @@
 import { Module } from 'vuex'
 import { RootState } from '@/types'
-import { state, CartState } from './state'
+import type { CartState } from '@/types/cart'
+import { state } from './state'
 import { mutations } from './mutations'
 
 import { getters } from './getters'
