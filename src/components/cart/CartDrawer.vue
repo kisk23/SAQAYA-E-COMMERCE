@@ -4,6 +4,7 @@
       class="cart-drawer__backdrop"
       :class="{ 'cart-drawer__backdrop--active': isOpen }"
       @click="$emit('close')"
+      data-test="backdrop"
     />
 
     <aside
@@ -11,17 +12,25 @@
       :class="{ 'cart-drawer--active': isOpen }"
       aria-label="Shopping cart"
       @click.stop
+      data-test="drawer"
     >
       <div class="cart-drawer__header">
         <h3 class="cart-drawer__title">Shopping Cart</h3>
-        <button class="cart-drawer__close" @click="$emit('close')">✕</button>
+        <button class="cart-drawer__close" @click="$emit('close')" data-test="close">✕</button>
       </div>
 
-      <div v-if="cartItems.length === 0" class="cart-drawer__empty">Your cart is empty</div>
+      <div v-if="cartItems.length === 0" class="cart-drawer__empty" data-test="empty">
+        Your cart is empty
+      </div>
 
       <div v-else class="cart-drawer__body">
         <div class="cart-drawer__items">
-          <div class="cart-drawer__item" v-for="item in cartItems" :key="item.id">
+          <div
+            class="cart-drawer__item"
+            v-for="item in cartItems"
+            :key="item.id"
+            data-test="cart-item"
+          >
             <img v-if="item.image" :src="item.image" :alt="item.title" class="cart-drawer__image" />
             <div v-else class="cart-drawer__image cart-drawer__image--placeholder">N/A</div>
 
@@ -29,15 +38,17 @@
               <p class="cart-drawer__name">{{ item.title }}</p>
 
               <div class="cart-drawer__controls">
-                <button @click="decrease(item.id)">−</button>
+                <button @click="decrease(item.id)" data-test="decrease">−</button>
                 <span>{{ item.quantity }}</span>
-                <button @click="increase(item.id)">+</button>
+                <button @click="increase(item.id)" data-test="increase">+</button>
               </div>
 
-              <button class="cart-drawer__remove" @click="remove(item.id)">Remove</button>
+              <button class="cart-drawer__remove" @click="remove(item.id)" data-test="remove">
+                Remove
+              </button>
             </div>
 
-            <p class="cart-drawer__price">
+            <p class="cart-drawer__price" data-test="total">
               {{ formatPrice(item.lineTotal) }}
             </p>
           </div>

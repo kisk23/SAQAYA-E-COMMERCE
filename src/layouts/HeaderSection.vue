@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import CartDrawer from '@/components/CartDrawer.vue'
+import CartDrawer from '@/components/cart/CartDrawer.vue'
 
 export default Vue.extend({
   name: 'HeaderSection',

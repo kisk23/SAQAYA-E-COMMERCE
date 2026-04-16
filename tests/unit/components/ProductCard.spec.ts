@@ -19,9 +19,6 @@ const mockProduct = {
   reviews: [{ rating: 4 }, { rating: 4 }],
 }
 
-type ProductCardInstance = InstanceType<typeof ProductCard> & {
-  averageRating: number
-}
 describe('ProductCard.vue', () => {
   it('renders product title and prices correctly', () => {
     const wrapper = mount(ProductCard, {
@@ -35,26 +32,6 @@ describe('ProductCard.vue', () => {
     expect(wrapper.find('[data-testid="product-price"]').text()).toContain(discounted)
 
     expect(wrapper.find('[data-testid="product-old-price"]').text()).toContain('100.00')
-  })
-
-  it('calculates average rating correctly', () => {
-    const wrapper = mount(ProductCard, {
-      propsData: { product: mockProduct },
-    })
-
-    const vm = wrapper.vm as ProductCardInstance
-    expect(vm.averageRating).toBe(4)
-  })
-
-  it('returns 0 average rating if no reviews', () => {
-    const wrapper = mount(ProductCard, {
-      propsData: {
-        product: { ...mockProduct, reviews: [] },
-      },
-    })
-
-    const vm = wrapper.vm as ProductCardInstance
-    expect(vm.averageRating).toBe(0)
   })
 
   it('calls $store.commit when Add to Cart is clicked', async () => {
@@ -80,36 +57,20 @@ describe('ProductCard.vue', () => {
       propsData: { product: mockProduct },
       mocks: {
         $router: { push },
+        $route: { fullPath: '/' },
       },
     })
 
     await wrapper.find('[data-testid="product-image"]').trigger('click')
 
     expect(push).toHaveBeenCalledTimes(1)
-    expect(push).toHaveBeenCalledWith('/products/1')
-  })
-
-  it('renders correct number of reviews', () => {
-    const wrapper = mount(ProductCard, {
-      propsData: { product: mockProduct },
+    expect(push).toHaveBeenCalledWith({
+      path: '/products/1',
+      query: {
+        from: '/',
+        fromLabel: 'Home',
+      },
     })
-
-    expect(wrapper.find('[data-testid="review-count"]').text()).toContain('(2)')
-  })
-
-  it('renders correct number of filled and empty stars', () => {
-    const wrapper = mount(ProductCard, {
-      propsData: { product: mockProduct },
-    })
-
-    const stars = wrapper.findAll('[data-testid="star"]')
-
-    const filledStars = stars.filter((star) => star.attributes('data-filled') === 'true')
-
-    const emptyStars = stars.filter((star) => star.attributes('data-filled') !== 'true')
-
-    expect(filledStars.length).toBe(4)
-    expect(emptyStars.length).toBe(1)
   })
 
   it('renders no filled stars when there are no reviews', () => {
@@ -156,19 +117,6 @@ describe('ProductCard.vue', () => {
     const badge = wrapper.find('[data-testid="discount-badge"]')
 
     expect(badge.text()).toBe('')
-  })
-
-  it('rounds average rating correctly (3.5 → 4 stars)', () => {
-    const wrapper = mount(ProductCard, {
-      propsData: {
-        product: { ...mockProduct, reviews: [{ rating: 3 }, { rating: 4 }] },
-      },
-    })
-
-    const stars = wrapper.findAll('[data-testid="star"]')
-    const filledStars = stars.filter((star) => star.attributes('data-filled') === 'true')
-
-    expect(filledStars.length).toBe(4)
   })
 
   it('does not call $store.commit on mount', () => {

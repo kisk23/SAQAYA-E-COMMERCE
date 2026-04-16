@@ -87,7 +87,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import FooterLink from '@/components/FooterLink.vue'
+import FooterLink from '@/components/shared/FooterLink.vue'
 export default Vue.extend({
   name: 'FooterSection',
   components: { FooterLink },
