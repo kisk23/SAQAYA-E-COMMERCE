@@ -8,7 +8,7 @@ import ContactView from '@/views/ContactView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import ProductsView from '@/views/products/list/ProductsView.vue'
 import ProductView from '@/views/products/detail/ProductView.vue'
-import { ensureProductsLoaded } from './guards'
+import { ensureProductsLoaded, validateProductId } from './guards'
 
 Vue.use(VueRouter)
 
@@ -34,6 +34,7 @@ const routes: Array<RouteConfig> = [
         name: 'product',
         component: ProductView,
         props: true,
+        beforeEnter: validateProductId,
       },
       {
         path: 'about',

@@ -11,3 +11,13 @@ export const ensureProductsLoaded: NavigationGuard = async (to, from, next) => {
     next(false)
   }
 }
+
+export const validateProductId: NavigationGuard = async (to, from, next) => {
+  const id = Number(to.params.id)
+
+  if (!Number.isInteger(id) || id < 1 || id > 100) {
+    return next({ name: 'not-found' })
+  }
+
+  next()
+}
