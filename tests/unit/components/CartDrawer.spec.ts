@@ -3,8 +3,8 @@ import Vuex from 'vuex'
 import CartDrawer from '@/components/cart/CartDrawer.vue'
 import { Store, GetterTree, MutationTree } from 'vuex'
 
-import { RootState } from '@/types'
-import { CartState } from '@/store/modules/cart/state'
+import { RootState, CartState } from '@/types'
+
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
