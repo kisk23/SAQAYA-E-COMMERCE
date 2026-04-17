@@ -1,14 +1,8 @@
-import { mount } from '@vue/test-utils'
+import { setupMount } from '@tests/helpers'
 import ContactInfo from '@/components/contact/ContactInfo.vue'
 
 describe('ContactInfo.vue', () => {
-  const setup = () => {
-    const wrapper = mount(ContactInfo)
-
-    const get = (id: string) => wrapper.find(`[data-test="${id}"]`)
-
-    return { wrapper, get }
-  }
+  const setup = () => setupMount(ContactInfo)
 
   it('renders main container', () => {
     const { get } = setup()

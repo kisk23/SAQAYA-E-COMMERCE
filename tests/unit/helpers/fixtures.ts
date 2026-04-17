@@ -1,4 +1,3 @@
-
 export const mockProduct = {
   id: 1,
   title: 'Test Product',
@@ -7,7 +6,6 @@ export const mockProduct = {
   thumbnail: 'test.jpg',
   reviews: [{ rating: 4 }, { rating: 4 }],
 }
-
 
 export const mockCartItems = [
   {
@@ -18,7 +16,6 @@ export const mockCartItems = [
     lineTotal: 200,
   },
 ]
-
 
 export const mockMultiCartItems = [
   { id: 1, title: 'Product A', quantity: 1, image: 'a.jpg', lineTotal: 100 },

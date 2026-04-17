@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { setupMount } from '@tests/helpers'
 import ContactForm from '@/components/contact/ContactForm.vue'
 import { validateContactForm } from '@/services/validation.service'
 import type { ValidationErrors } from '@/types/validation'
@@ -17,13 +17,7 @@ jest.mock('@/services/validation.service')
 describe('ContactForm.vue', () => {
   const mockValidate = validateContactForm as jest.Mock
 
-  const setup = () => {
-    const wrapper = mount(ContactForm)
-
-    const get = (id: string) => wrapper.find(`[data-test="${id}"]`)
-
-    return { wrapper, get }
-  }
+  const setup = () => setupMount(ContactForm)
 
   beforeEach(() => {
     jest.clearAllMocks()

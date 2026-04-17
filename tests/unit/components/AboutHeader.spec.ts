@@ -1,14 +1,8 @@
-import { mount } from '@vue/test-utils'
+import { setupMount } from '@tests/helpers'
 import AboutHeader from '@/components/about/AboutHeader.vue'
 
 describe('AboutHeader.vue', () => {
-  const setup = () => {
-    const wrapper = mount(AboutHeader)
-
-    const get = (id: string) => wrapper.find(`[data-test="${id}"]`)
-
-    return { wrapper, get }
-  }
+  const setup = () => setupMount(AboutHeader)
 
   it('renders main section', () => {
     const { get } = setup()

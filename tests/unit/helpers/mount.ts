@@ -2,15 +2,12 @@ import { mount, shallowMount, Wrapper, createLocalVue } from '@vue/test-utils'
 import Vuex, { Store, GetterTree, MutationTree } from 'vuex'
 import { RootState, CartState } from '@/types'
 
-
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
 export { localVue }
 
-
 export type GetFn = (id: string) => Wrapper<Vue>
-
 
 export const createGetHelper = (
   wrapper: Wrapper<Vue>,
@@ -19,12 +16,10 @@ export const createGetHelper = (
   return (id: string) => wrapper.find(`[${attr}="${id}"]`)
 }
 
-
 interface SetupResult {
   wrapper: Wrapper<Vue>
   get: GetFn
 }
-
 
 export const setupMount = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,7 +45,6 @@ export const setupShallowMount = (
   return { wrapper, get }
 }
 
-
 // Vuex store factory for cart-related tests
 
 export interface CartStoreOptions {
@@ -58,9 +52,7 @@ export interface CartStoreOptions {
   mutations?: Partial<MutationTree<CartState>>
 }
 
-export const createCartStore = (
-  overrides: CartStoreOptions = {}
-): Store<RootState> => {
+export const createCartStore = (overrides: CartStoreOptions = {}): Store<RootState> => {
   const defaultGetters: GetterTree<CartState, RootState> = {
     'cart/cartItems': () => [],
     'cart/totalItems': () => 0,
