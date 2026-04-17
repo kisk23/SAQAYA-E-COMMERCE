@@ -1,20 +1,21 @@
 <template>
   <div class="products-header">
-    <h2 class="products-header__title">Explore Our Products</h2>
+    <h2 class="products-header__title" data-test="products-title">Explore Our Products</h2>
 
     <div class="products-header__controls">
-      <label class="products-header__label">Sort by</label>
+      <label class="products-header__label" data-test="sort-label">Sort by</label>
 
-      <div class="dropdown" ref="dropdown" @click.stop="toggle">
-        <div class="dropdown__selected">
+      <div class="dropdown" ref="dropdown" @click.stop="toggle" data-test="dropdown">
+        <div class="dropdown__selected" data-test="dropdown-selected">
           {{ selected }}
         </div>
 
-        <ul v-if="open" class="dropdown__menu">
+        <ul v-if="open" class="dropdown__menu" data-test="dropdown-menu">
           <li
             v-for="option in options"
             :key="option"
             class="dropdown__item"
+            :data-test="getTestId(option)"
             @click.stop="select(option)"
           >
             {{ option }}
@@ -47,6 +48,14 @@ export default Vue.extend({
   methods: {
     toggle() {
       this.open = !this.open
+    },
+    getTestId(option: string) {
+      const map: Record<string, string> = {
+        'Highest Rating': 'dropdown-item-highest-rating',
+        'Price: Low to High': 'dropdown-item-price--low-to-high',
+        'Price: High to Low': 'dropdown-item-price--high-to-low',
+      }
+      return map[option]
     },
 
     select(option: string) {

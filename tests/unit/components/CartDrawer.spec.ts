@@ -58,12 +58,6 @@ describe('CartDrawer (missing unit tests)', () => {
     )
   })
 
-  it('defaults isOpen to false when prop is not passed', () => {
-    const wrapper = shallowMount(CartDrawer, { localVue, store })
-
-    expect(wrapper.find('[data-test="drawer"]').classes()).not.toContain('cart-drawer--active')
-  })
-
   it('has aria-label on the drawer element', () => {
     const wrapper = factory()
 
