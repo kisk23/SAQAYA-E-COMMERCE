@@ -8,4 +8,7 @@ export const getters: GetterTree<ProductState, RootState> = {
     console.log('Getting product by ID:', id)
     return state.products.find((p) => p.id === id)
   },
+  getByCategory: (state) => (category: string) => {
+    return state.products.filter((p) => p.category === category)
+  },
 }

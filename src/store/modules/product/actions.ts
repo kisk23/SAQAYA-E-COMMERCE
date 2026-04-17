@@ -29,4 +29,15 @@ export const actions: ActionTree<ProductState, RootState> = {
     commit('incrementPage')
     await dispatch('fetchProducts')
   },
+
+  async fetchByCategory({ commit }, category) {
+    try {
+      const res = await fetch(`https://dummyjson.com/products/category/${category}`)
+      const data = await res.json()
+
+      commit('setProducts', data.products)
+    } catch (err) {
+      console.error('Failed to fetch products:', err)
+    }
+  },
 }

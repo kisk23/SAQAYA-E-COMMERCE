@@ -14,6 +14,7 @@
       <ProductMain :product="product" class="product-view__gallery" />
       <ProductInfo :product="product" class="product-view__info" @buy-now="handleBuyNow" />
     </div>
+    <MoreofCategory v-if="product" :category="product.category" />
   </section>
 </template>
 
@@ -25,6 +26,7 @@ import ProductMain from '@/components/product-detail/ProductMain.vue'
 import ProductInfo from '@/components/product-detail/ProductInfo.vue'
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
 import { productService } from '@/services/product.service'
+import MoreofCategory from '@/components/product-detail/MoreofCategory.vue'
 
 export default Vue.extend({
   name: 'ProductView',
@@ -33,6 +35,7 @@ export default Vue.extend({
     ProductMain,
     ProductInfo,
     BreadCrumbs,
+    MoreofCategory,
   },
 
   data(): { loading: boolean; error: boolean; product: Product | null } {
@@ -87,6 +90,7 @@ export default Vue.extend({
 
       try {
         this.product = await productService.getProductById(id)
+        console.log('Product:', this.product)
       } catch {
         this.product = null
         this.error = true
