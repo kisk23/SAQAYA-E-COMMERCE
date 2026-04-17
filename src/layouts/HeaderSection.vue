@@ -10,15 +10,13 @@
         <router-link class="header__link" to="/contact" @click.native="closeMenu"
           >Contact</router-link
         >
+        <router-link class="header__link" to="/products" @click.native="closeMenu"
+          >Products</router-link
+        >
         <router-link class="header__link" to="/about" @click.native="closeMenu">About</router-link>
       </nav>
 
       <div class="header__actions">
-        <button class="header__hamburger" @click="toggleMenu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
         <div class="header__search">
           <input class="header__input" type="text" placeholder="What are you looking for?" />
           <button class="header__search-btn">
@@ -41,6 +39,11 @@
 
           <CartDrawer :isOpen="isCartOpen" @close="isCartOpen = false" />
         </div>
+        <button class="header__hamburger" @click="toggleMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
@@ -231,6 +234,7 @@ export default Vue.extend({
 }
 .header__nav--open {
   display: flex;
+  z-index: 2;
 }
 
 @media (min-width: 768px) {

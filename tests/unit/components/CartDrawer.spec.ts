@@ -5,7 +5,6 @@ import { Store, GetterTree, MutationTree } from 'vuex'
 
 import { RootState, CartState } from '@/types'
 
-
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
