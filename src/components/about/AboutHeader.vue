@@ -1,10 +1,10 @@
 <template>
-  <section class="about">
-    <div class="about__container">
-      <div class="about__content">
-        <h2 class="about__title">Our Story</h2>
+  <section class="about" data-test="about-header">
+    <div class="about__container" data-test="about-container">
+      <div class="about__content" data-test="about-content">
+        <h2 class="about__title" data-test="about-title">Our Story</h2>
 
-        <p>
+        <p class="about__text" data-test="about-text">
           Launced in 2015, Exclusive is South Asia’s premier online shopping makterplace with an
           active presense in Bangladesh. Supported by wide range of tailored marketing, data and
           service solutions, Exclusive has 10,500 sallers and 300 brands and serves 3 millioons
@@ -12,8 +12,13 @@
         </p>
       </div>
 
-      <div class="about__image-wrapper">
-        <img src="@/assets/images/about.svg" alt="about" class="about__image" />
+      <div class="about__image-wrapper" data-test="about-image-wrapper">
+        <img
+          src="@/assets/images/about.svg"
+          alt="about"
+          class="about__image"
+          data-test="about-image"
+        />
       </div>
     </div>
   </section>

@@ -114,4 +114,47 @@ describe('ContactForm.vue', () => {
 
     expect((wrapper.vm as ContactFormVm).form.name).toBe('Alice')
   })
+
+  it('hides all error spans when errors are cleared', async () => {
+    mockValidate.mockReturnValueOnce({
+      isValid: false,
+      errors: {
+        name: 'Name required',
+        email: 'Email invalid',
+        message: 'Message required',
+      },
+    })
+
+    const { wrapper, get } = setup()
+
+    await wrapper.find('form').trigger('submit.prevent')
+
+    expect(get('name-error').exists()).toBe(true)
+    expect(get('email-error').exists()).toBe(true)
+    expect(get('message-error').exists()).toBe(true)
+
+    mockValidate.mockReturnValueOnce({ isValid: true, errors: {} })
+    window.alert = jest.fn()
+
+    await wrapper.find('form').trigger('submit.prevent')
+
+    expect(get('name-error').exists()).toBe(false)
+    expect(get('email-error').exists()).toBe(false)
+    expect(get('message-error').exists()).toBe(false)
+  })
+
+  it('shows error when name is missing', async () => {
+    mockValidate.mockReturnValue({
+      isValid: false,
+      errors: { name: 'Name required' },
+    })
+
+    const { wrapper, get } = setup()
+
+    await wrapper.find('form').trigger('submit.prevent')
+
+    expect(get('name-error').exists()).toBe(true)
+    expect(get('email-error').exists()).toBe(false)
+    expect(get('message-error').exists()).toBe(false)
+  })
 })
