@@ -8,8 +8,9 @@
             type="text"
             placeholder="Your Name *"
             class="contact-form__input"
+            data-test="name-input"
           />
-          <span v-if="errors.name" class="contact-form__error">
+          <span v-if="errors.name" class="contact-form__error" data-test="name-error">
             {{ errors.name }}
           </span>
         </div>
@@ -20,8 +21,9 @@
             type="email"
             placeholder="Your Email *"
             class="contact-form__input"
+            data-test="email-input"
           />
-          <span v-if="errors.email" class="contact-form__error">
+          <span v-if="errors.email" class="contact-form__error" data-test="email-error">
             {{ errors.email }}
           </span>
         </div>
@@ -32,14 +34,17 @@
           v-model="form.message"
           placeholder="Your Message *"
           class="contact-form__textarea"
+          data-test="message-input"
         ></textarea>
-        <span v-if="errors.message" class="contact-form__error">
+        <span v-if="errors.message" class="contact-form__error" data-test="message-error">
           {{ errors.message }}
         </span>
       </div>
 
       <div class="contact-form__actions">
-        <button class="contact-form__button" type="submit">Send Message</button>
+        <button class="contact-form__button" type="submit" data-test="submit-button">
+          Send Message
+        </button>
       </div>
     </form>
   </div>
