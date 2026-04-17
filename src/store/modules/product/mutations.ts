@@ -24,4 +24,12 @@ export const mutations: MutationTree<ProductState> = {
   setLoading(state, value: boolean) {
     state.loading = value
   },
+  setActiveCategory(state, category: string | null) {
+    state.activeCategory = category
+  },
+  resetListingState(state) {
+    state.products = []
+    state.page = 1
+    state.hasMore = true
+  },
 }

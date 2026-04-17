@@ -1,11 +1,11 @@
 export interface CategoryState {
   categories: string[]
   loading: boolean
-  category: string
+  selectedCategory: string | null
 }
 
 export const state: CategoryState = {
   categories: [],
   loading: false,
-  category: '',
+  selectedCategory: null,
 }

@@ -8,4 +8,10 @@ export const mutations: MutationTree<CategoryState> = {
   setLoading(state: CategoryState, value: boolean) {
     state.loading = value
   },
+  setSelectedCategory(state: CategoryState, category: string) {
+    state.selectedCategory = category
+  },
+  clearSelectedCategory(state: CategoryState) {
+    state.selectedCategory = null
+  },
 }

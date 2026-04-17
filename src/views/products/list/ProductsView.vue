@@ -10,7 +10,7 @@
       No products available
     </div>
 
-    <LoadMoreButton v-if="hasMore" :loading="loading" @click="loadMore" />
+    <LoadMoreButton v-if="hasMore && !isCategoryMode" :loading="loading" @click="loadMore" />
   </section>
 </template>
 
@@ -55,6 +55,15 @@ export default Vue.extend({
     products(): Product[] {
       return this.$store.state.product.products as Product[]
     },
+    activeCategory(): string | null {
+      return this.$store.getters['product/activeCategory'] as string | null
+    },
+    selectedCategory(): string | null {
+      return this.$store.getters['category/selectedCategory'] as string | null
+    },
+    isCategoryMode(): boolean {
+      return Boolean(this.selectedCategory)
+    },
     sortedProducts(): Product[] {
       const sorted = [...this.products]
 
@@ -82,9 +91,7 @@ export default Vue.extend({
       this.sortBy = querySort
     }
 
-    if (!this.products.length) {
-      this.$store.dispatch('product/fetchProducts')
-    }
+    this.syncProductsWithRoute(this.$route.query.category)
   },
 
   watch: {
@@ -94,6 +101,12 @@ export default Vue.extend({
         if (this.isSortOption(value)) {
           this.sortBy = value
         }
+      },
+    },
+    '$route.query.category': {
+      immediate: false,
+      handler(value: unknown) {
+        this.syncProductsWithRoute(value)
       },
     },
   },
@@ -118,11 +131,39 @@ export default Vue.extend({
     isSortOption(value: unknown): value is SortOption {
       return typeof value === 'string' && (SORT_OPTIONS as readonly string[]).includes(value)
     },
+    parseCategoryQuery(value: unknown): string {
+      if (typeof value === 'string') return value.trim()
+      if (Array.isArray(value) && typeof value[0] === 'string') return value[0].trim()
+      return ''
+    },
+    async syncProductsWithRoute(rawCategory: unknown): Promise<void> {
+      const category = this.parseCategoryQuery(rawCategory)
+
+      if (category) {
+        this.$store.dispatch('category/setSelectedCategory', category)
+
+        if (this.activeCategory !== category || !this.products.length) {
+          await this.$store.dispatch('product/fetchByCategory', category)
+        }
+
+        return
+      }
+
+      this.$store.dispatch('category/clearSelectedCategory')
+
+      if (this.activeCategory !== null) {
+        await this.$store.dispatch('product/prepareDefaultListing')
+      }
+
+      if (!this.products.length) {
+        await this.$store.dispatch('product/fetchProducts')
+      }
+    },
   },
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .products {
   max-width: 1170px;
   margin: 40px auto;

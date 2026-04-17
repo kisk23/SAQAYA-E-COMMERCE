@@ -27,6 +27,7 @@ const categoryMap: Record<string, { label: string; icon: string }> = {
 
 export const getters: GetterTree<CategoryState, RootState> = {
   categories: (state) => state.categories,
+  selectedCategory: (state) => state.selectedCategory,
   mappedCategories: (state) => {
     return state.categories
       .filter((cat) => categoryMap[cat])

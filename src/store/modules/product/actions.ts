@@ -18,6 +18,7 @@ export const actions: ActionTree<ProductState, RootState> = {
         commit('addProducts', data.products)
       }
 
+      commit('setActiveCategory', null)
       console.log('products:', data.products)
     } catch (err) {
       console.error('Fetch failed:', err)
@@ -25,19 +26,40 @@ export const actions: ActionTree<ProductState, RootState> = {
       commit('setLoading', false)
     }
   },
-  async loadMore({ commit, dispatch }) {
+  async loadMore({ state, commit, dispatch }) {
+    // Load-more is only relevant for the default paginated listing.
+    if (state.activeCategory) return
+
     commit('incrementPage')
     await dispatch('fetchProducts')
   },
 
-  async fetchByCategory({ commit }, category) {
+  async fetchByCategory({ state, commit }, category: string) {
+    if (!category || state.loading) return
+
+    if (state.activeCategory === category && state.products.length) return
+
+    commit('setLoading', true)
+    commit('resetListingState')
+    commit('setActiveCategory', category)
+
     try {
-      const res = await fetch(`https://dummyjson.com/products/category/${category}`)
-      const data = await res.json()
+      const data = await productService.getProductsByCategory(category)
 
       commit('setProducts', data.products)
+      commit('setHasMore', false)
     } catch (err) {
       console.error('Failed to fetch products:', err)
+      commit('setProducts', [])
+      commit('setHasMore', false)
+    } finally {
+      commit('setLoading', false)
+    }
+  },
+  prepareDefaultListing({ state, commit }) {
+    if (state.activeCategory !== null) {
+      commit('resetListingState')
+      commit('setActiveCategory', null)
     }
   },
 }

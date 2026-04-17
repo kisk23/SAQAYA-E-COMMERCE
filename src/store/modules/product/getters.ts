@@ -4,6 +4,7 @@ import { RootState } from '@/types'
 
 export const getters: GetterTree<ProductState, RootState> = {
   products: (state) => state.products,
+  activeCategory: (state) => state.activeCategory,
   getProductById: (state) => (id: number) => {
     console.log('Getting product by ID:', id)
     return state.products.find((p) => p.id === id)

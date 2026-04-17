@@ -16,4 +16,8 @@ export const productService = {
     const res = await http.get(`/products/${id}`)
     return res.data
   },
+  async getProductsByCategory(category: string) {
+    const res = await http.get(`/products/category/${encodeURIComponent(category)}`)
+    return res.data
+  },
 }

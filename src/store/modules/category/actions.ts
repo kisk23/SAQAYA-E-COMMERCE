@@ -18,4 +18,10 @@ export const actions: ActionTree<CategoryState, RootState> = {
       commit('setLoading', false)
     }
   },
+  setSelectedCategory({ commit }, category: string) {
+    commit('setSelectedCategory', category)
+  },
+  clearSelectedCategory({ commit }) {
+    commit('clearSelectedCategory')
+  },
 }

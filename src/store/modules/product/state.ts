@@ -6,6 +6,7 @@ export interface ProductState {
   loading: boolean
   limit: number
   hasMore: boolean
+  activeCategory: string | null
 }
 
 export const state: ProductState = {
@@ -14,4 +15,5 @@ export const state: ProductState = {
   loading: false,
   limit: 12,
   hasMore: true,
+  activeCategory: null,
 }
