@@ -112,7 +112,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .hero {
   display: flex;
   justify-content: center;

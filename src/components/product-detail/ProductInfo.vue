@@ -126,7 +126,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .product-info {
   display: flex;
   flex-direction: column;

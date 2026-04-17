@@ -98,7 +98,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .flash-sales {
   padding: 20px;
   max-width: 1170px;

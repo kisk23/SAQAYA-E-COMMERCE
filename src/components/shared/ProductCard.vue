@@ -97,11 +97,13 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/assets/styles/abstracts/variables' as *;
+
 .product-card {
   width: 100%;
   max-width: 280px;
-  background: #fff;
+  background: $color-bg;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -146,12 +148,14 @@ export default Vue.extend({
   text-decoration: line-through;
   color: gray;
 }
+
 .product-card__actions {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
 }
+
 .product-card__actions button {
   position: relative;
   width: 100%;
@@ -161,11 +165,11 @@ export default Vue.extend({
   border: none;
   font-weight: 600;
   cursor: pointer;
-
   box-sizing: border-box;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
+
 .product-card__image:hover .product-card__actions button {
   opacity: 1;
 }
@@ -179,6 +183,7 @@ export default Vue.extend({
 .product-card__star--filled {
   fill: #f5a623;
 }
+
 .product-card__rating {
   display: flex;
   align-items: center;
@@ -190,11 +195,11 @@ export default Vue.extend({
   color: #888;
   margin-top: -4px;
 }
+
 .product-card__top-actions {
   position: absolute;
   top: 10px;
   right: 10px;
-
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -206,11 +211,9 @@ export default Vue.extend({
   border-radius: 50%;
   border: none;
   background: white;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }

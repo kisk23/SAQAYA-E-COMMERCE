@@ -25,7 +25,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .products-list {
   display: grid;
 

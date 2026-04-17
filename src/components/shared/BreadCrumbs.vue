@@ -30,7 +30,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .breadcrumbs {
   font-size: 12px;
   color: #777;

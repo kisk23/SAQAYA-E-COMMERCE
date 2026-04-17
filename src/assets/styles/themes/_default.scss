@@ -1,0 +1,14 @@
+@use '../abstracts/variables' as *;
+
+// Keep runtime CSS variables for plain CSS consumers in scoped blocks.
+:root {
+  --color-bg: #{$color-bg};
+  --color-primary: #{$color-primary};
+  --color-accent: #{$color-accent};
+
+  --shadow-sm: #{$shadow-sm};
+  --shadow-lg: #{$shadow-lg};
+
+  --radius-md: #{$radius-md};
+  --radius-lg: #{$radius-lg};
+}

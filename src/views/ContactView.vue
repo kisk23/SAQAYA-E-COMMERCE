@@ -34,7 +34,7 @@ export default Vue.extend({
   },
 })
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .contact {
   max-width: 1200px;
   margin: auto;

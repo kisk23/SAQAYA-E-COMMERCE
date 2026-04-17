@@ -81,7 +81,7 @@ export default Vue.extend({
   },
 })
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .header {
   width: 100%;
   background-color: #ffffff;

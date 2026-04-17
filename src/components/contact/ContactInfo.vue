@@ -41,7 +41,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .contact-info {
   width: 100%;
   background: #ffffff;

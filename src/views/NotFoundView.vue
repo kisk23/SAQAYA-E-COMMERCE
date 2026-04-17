@@ -38,7 +38,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .notfound {
   padding: 40px 20px;
   max-width: 1100px;

@@ -94,7 +94,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .footer {
   background: #000;
   color: #fff;

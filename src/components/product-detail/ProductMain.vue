@@ -102,7 +102,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .product-gallery {
   display: flex;
   gap: 16px;

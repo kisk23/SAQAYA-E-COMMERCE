@@ -21,7 +21,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .load-more {
   display: flex;
   justify-content: center;

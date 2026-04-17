@@ -83,7 +83,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .contact-form {
   background: #fff;
 }

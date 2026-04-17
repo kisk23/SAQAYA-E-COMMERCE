@@ -1,0 +1,18 @@
+@use './variables' as *;
+
+// Placeholders
+%button-base {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+%card-base {
+  background: $color-bg;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  padding: 1rem;
+}

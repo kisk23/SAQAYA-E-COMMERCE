@@ -12,6 +12,7 @@ Deployed app:
 - Vuex 3
 - TypeScript
 - Axios
+- Sass (`sass` + `sass-loader`)
 - Jest + Vue Test Utils
 - Swiper (home sliders)
 - ESLint + Prettier
@@ -26,9 +27,37 @@ app/
 |   |   |-- icons/
 |   |   |-- images/
 |   |   `-- styles/
-|   |       |-- base.css
-|   |       |-- main.css
-|   |       `-- tokens.css
+|   |       |-- abstracts/
+|   |       |   |-- _variables.scss
+|   |       |   |-- _mixins.scss
+|   |       |   |-- _functions.scss
+|   |       |   `-- _placeholders.scss
+|   |       |-- base/
+|   |       |   |-- _typography.scss
+|   |       |   `-- _base.scss
+|   |       |-- components/
+|   |       |   |-- _buttons.scss
+|   |       |   |-- _cards.scss
+|   |       |   |-- _forms.scss
+|   |       |   |-- _modals.scss
+|   |       |   `-- _tables.scss
+|   |       |-- layout/
+|   |       |   |-- _header.scss
+|   |       |   |-- _footer.scss
+|   |       |   |-- _navigation.scss
+|   |       |   |-- _sidebar.scss
+|   |       |   `-- _grid.scss
+|   |       |-- pages/
+|   |       |   |-- _home.scss
+|   |       |   |-- _products.scss
+|   |       |   |-- _cart.scss
+|   |       |   `-- _auth.scss
+|   |       |-- themes/
+|   |       |   `-- _default.scss
+|   |       |-- vendors/
+|   |       |   |-- _bootstrap.scss
+|   |       |   `-- _vuetify-overrides.scss
+|   |       `-- main.scss
 |   |-- components/
 |   |   |-- about/
 |   |   |-- cart/
@@ -111,6 +140,13 @@ Modules:
 - `category`: category list + loading state
 - `cart`: cart items, quantity updates, totals, localStorage persistence
 
+## Styling Architecture
+
+- Global stylesheet entry is `src/assets/styles/main.scss` and is imported in `src/main.ts`.
+- Styles follow a 7-1 Sass layout under `src/assets/styles/` (`abstracts`, `base`, `components`, `layout`, `pages`, `themes`, `vendors`).
+- Runtime CSS custom properties are exposed in `src/assets/styles/themes/_default.scss` for components that consume `var(--...)`.
+- Component, view, and layout style blocks use `<style lang="scss" scoped>`.
+
 ## Data Layer
 
 Services are in `src/services/`:
@@ -131,7 +167,7 @@ Services are in `src/services/`:
 
 ### Prerequisites
 
-- Node.js 16+ recommended
+- Node.js 18.12+ recommended
 - npm
 
 ### Install

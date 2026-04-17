@@ -120,7 +120,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .team {
   padding: 40px 20px;
   background: #ffffff;

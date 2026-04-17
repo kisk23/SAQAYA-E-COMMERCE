@@ -114,7 +114,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .cart-drawer__backdrop {
   position: fixed;
   inset: 0;
