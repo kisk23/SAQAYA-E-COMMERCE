@@ -1,32 +1,42 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
     "strict": true,
     "jsx": "preserve",
-    "moduleResolution": "node",
-    "skipLibCheck": true,
+
+    "sourceMap": true,
+    "resolveJsonModule": true,
+
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": ["webpack-env", "jest"],
+
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
     "paths": {
-      "@/*": ["src/*"],
-      "@tests/*": ["tests/unit/*"]
+      "@/*": ["./src/*"],
+      "@tests/*": ["./tests/unit/*"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+
+    "types": ["jest"],
+
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
+
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/**/*.d.ts",
     "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "tests/**/*.d.ts"
+    "tests/**/*.tsx"
   ],
+
   "exclude": ["node_modules"]
 }
