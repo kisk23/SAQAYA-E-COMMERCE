@@ -16,13 +16,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'StatsSection',
-  data() {
-    return {
-      stats: [
+<script setup lang="ts">
+
+
+  const stats= [
         {
           value: '10.5k',
           title: 'Sellers active on site',
@@ -44,10 +41,8 @@ export default Vue.extend({
           title: 'Annual gross sale on site',
           icon: require('@/assets/icons/money.svg'),
         },
-      ],
-    }
-  },
-})
+      ]
+ 
 </script>
 
 <style lang="scss" scoped>

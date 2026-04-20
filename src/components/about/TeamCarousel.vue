@@ -26,97 +26,82 @@
     </div>
   </section>
 </template>
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
 import Swiper from 'swiper'
 import { Pagination } from 'swiper/modules'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-import { Member } from '@/types'
+import type { Member } from '@/types'
 
-export default Vue.extend({
-  name: 'TeamCarousel',
+const teamSwiper = ref<HTMLElement | null>(null)
+let swiperInstance: Swiper | null = null
 
-  data(): { swiperInstance: Swiper | null | undefined; members: Member[] } {
-    return {
-      swiperInstance: null,
-      members: [
-        {
-          id: 1,
-          name: 'Tom Cruise',
-          role: 'Founder & Chairman',
-          image: require('@/assets/images/team1.png'),
-        },
-        {
-          id: 2,
-          name: 'Emma Watson',
-          role: 'Managing Director',
-          image: require('@/assets/images/team2.png'),
-        },
-        {
-          id: 3,
-          name: 'Will Smith',
-          role: 'Product Designer',
-          image: require('@/assets/images/team3.png'),
-        },
-        {
-          id: 4,
-          name: 'Will Smith',
-          role: 'Product Designer',
-          image: require('@/assets/images/team3.png'),
-        },
-        {
-          id: 5,
-          name: 'Will Smith',
-          role: 'Product Designer',
-          image: require('@/assets/images/team3.png'),
-        },
-      ],
-    }
+const members: Member[] = [
+  {
+    id: 1,
+    name: 'Tom Cruise',
+    role: 'Founder & Chairman',
+    image: require('@/assets/images/team1.png'),
   },
-
-  mounted() {
-    this.initSwiper()
+  {
+    id: 2,
+    name: 'Emma Watson',
+    role: 'Managing Director',
+    image: require('@/assets/images/team2.png'),
   },
-
-  beforeDestroy() {
-    this.swiperInstance?.destroy(true, true)
+  {
+    id: 3,
+    name: 'Will Smith',
+    role: 'Product Designer',
+    image: require('@/assets/images/team3.png'),
   },
+  {
+    id: 4,
+    name: 'Will Smith',
+    role: 'Product Designer',
+    image: require('@/assets/images/team3.png'),
+  },
+  {
+    id: 5,
+    name: 'Will Smith',
+    role: 'Product Designer',
+    image: require('@/assets/images/team3.png'),
+  },
+]
 
-  methods: {
-    initSwiper(): void {
-      const el = this.$refs.teamSwiper as HTMLElement | undefined
-      if (!el) return
+onMounted(() => {
+  const el = teamSwiper.value
+  if (!el) return
 
-      this.swiperInstance = new Swiper(el, {
-        modules: [Pagination],
-
-        slidesPerView: 3,
-        spaceBetween: 24,
-        loop: true,
-        centeredSlides: false,
-
-        pagination: {
-          el: '.team__pagination',
-          clickable: true,
-        },
-
-        breakpoints: {
-          0: {
-            slidesPerView: 1,
-          },
-          640: {
-            slidesPerView: 2,
-          },
-          1024: {
-            slidesPerView: 3,
-          },
-        },
-      })
+  swiperInstance = new Swiper(el, {
+    modules: [Pagination],
+    slidesPerView: 3,
+    spaceBetween: 24,
+    loop: true,
+    centeredSlides: false,
+    pagination: {
+      el: '.team__pagination',
+      clickable: true,
     },
-  },
+    breakpoints: {
+      0: {
+        slidesPerView: 1,
+      },
+      640: {
+        slidesPerView: 2,
+      },
+      1024: {
+        slidesPerView: 3,
+      },
+    },
+  })
+})
+
+onBeforeUnmount(() => {
+  swiperInstance?.destroy(true, true)
 })
 </script>
 

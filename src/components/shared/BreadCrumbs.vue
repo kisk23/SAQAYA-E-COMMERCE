@@ -15,19 +15,16 @@
   </nav>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+
 import type { BreadcrumbItem } from '@/types/breadcrumb'
-import { PropType } from 'vue'
-export default Vue.extend({
-  name: 'BreadCrumbs',
-  props: {
-    items: {
-      type: Array as PropType<BreadcrumbItem[]>,
-      required: true,
-    },
-  },
-})
+
+defineProps<{
+  items: BreadcrumbItem[]
+}>()
+
+ 
+
 </script>
 
 <style lang="scss" scoped>

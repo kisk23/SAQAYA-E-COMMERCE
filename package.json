@@ -44,7 +44,8 @@
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "vue/setup-compiler-macros": true
     },
     "parser": "vue-eslint-parser",
     "parserOptions": {
