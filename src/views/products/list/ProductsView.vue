@@ -4,11 +4,9 @@
 
     <ProductsHeader @change="handleSortChange" />
 
-    <ProductsList :products="sortedProducts" />
+    <ProductsList :products="products" />
 
-    <div v-if="!sortedProducts.length && !loading" class="products__empty">
-      No products available
-    </div>
+    <div v-if="!products.length && !loading" class="products__empty">No products available</div>
 
     <LoadMoreButton v-if="hasMore && !isCategoryMode" :loading="loading" @click="loadMore" />
   </section>
@@ -29,6 +27,7 @@ import { useCategoryStore } from '@/store/modules/category'
 const SORT_OPTIONS = ['Highest Rating', 'Price: Low to High', 'Price: High to Low'] as const
 
 type SortOption = (typeof SORT_OPTIONS)[number]
+type ApiSortOrder = 'asc' | 'desc'
 
 const route = useRoute()
 const router = useRouter()
@@ -36,6 +35,11 @@ const productStore = useProductStore()
 const categoryStore = useCategoryStore()
 
 const sortBy = ref<SortOption>('Highest Rating')
+const SORT_TO_API: Record<SortOption, { sortBy: string; order: ApiSortOrder }> = {
+  'Highest Rating': { sortBy: 'rating', order: 'desc' },
+  'Price: Low to High': { sortBy: 'price', order: 'asc' },
+  'Price: High to Low': { sortBy: 'price', order: 'desc' },
+}
 
 const getSingleQueryValue = (value: unknown): string | null => {
   if (typeof value === 'string') return value
@@ -68,20 +72,6 @@ const selectedCategory = computed<string | null>(() => categoryStore.selectedCat
 const isCategoryMode = computed<boolean>(() => Boolean(selectedCategory.value))
 const loading = computed<boolean>(() => productStore.loading)
 const hasMore = computed<boolean>(() => productStore.hasMore)
-
-const sortedProducts = computed<Product[]>(() => {
-  const sorted = [...products.value]
-
-  if (sortBy.value === 'Price: Low to High') {
-    return sorted.sort((a, b) => a.price - b.price)
-  }
-
-  if (sortBy.value === 'Price: High to Low') {
-    return sorted.sort((a, b) => b.price - a.price)
-  }
-
-  return sorted.sort((a, b) => b.rating - a.rating)
-})
 
 const loadMore = (): void => {
   productStore.loadMore()
@@ -120,9 +110,8 @@ const syncProductsWithRoute = async (rawCategory: unknown): Promise<void> => {
     productStore.prepareDefaultListing()
   }
 
-  if (!products.value.length) {
-    await productStore.fetchProducts()
-  }
+  const apiSort = SORT_TO_API[sortBy.value]
+  await productStore.fetchSortedProducts(apiSort.sortBy, apiSort.order)
 }
 
 const initialSort = getSingleQueryValue(route.query.sort)
@@ -132,9 +121,16 @@ if (isSortOption(initialSort)) {
 
 watch(
   () => route.query.sort,
-  (value) => {
+  async (value) => {
     if (isSortOption(value)) {
       sortBy.value = value
+    } else {
+      sortBy.value = 'Highest Rating'
+    }
+
+    if (!isCategoryMode.value) {
+      const apiSort = SORT_TO_API[sortBy.value]
+      await productStore.fetchSortedProducts(apiSort.sortBy, apiSort.order)
     }
   }
 )

@@ -55,7 +55,7 @@ const isCartOpen = ref(false)
 
 const cartStore = useCartStore()
 
-const cartCount = computed(() => cartStore.cartTotal)
+const cartCount = computed(() => cartStore.totalItems)
 
 const toggleCart = () => {
   isCartOpen.value = !isCartOpen.value

@@ -7,4 +7,6 @@ export const createInitialState = (): ProductState => ({
   limit: 12,
   hasMore: true,
   activeCategory: null,
+  sortBy: null,
+  sortOrder: null,
 })

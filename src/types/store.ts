@@ -7,4 +7,6 @@ export interface ProductState {
   limit: number
   hasMore: boolean
   activeCategory: string | null
+  sortBy: string | null
+  sortOrder: 'asc' | 'desc' | null
 }

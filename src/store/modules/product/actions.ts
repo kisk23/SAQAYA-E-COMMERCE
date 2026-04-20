@@ -8,6 +8,8 @@ interface ProductActionContext {
   limit: number
   hasMore: boolean
   activeCategory: string | null
+  sortBy: string | null
+  sortOrder: 'asc' | 'desc' | null
   fetchProducts: () => Promise<void>
 }
 
@@ -17,7 +19,12 @@ export const actions = {
 
     this.loading = true
     try {
-      const data = await productService.getProducts(this.limit, (this.page - 1) * this.limit)
+      const data = await productService.getProducts(
+        this.limit,
+        (this.page - 1) * this.limit,
+        this.sortBy ?? undefined,
+        this.sortOrder ?? undefined
+      )
 
       if (!data.products.length) {
         this.hasMore = false
@@ -40,6 +47,22 @@ export const actions = {
     this.page += 1
     await this.fetchProducts()
   },
+  async fetchSortedProducts(
+    this: ProductActionContext,
+    sortBy: string | null,
+    sortOrder: 'asc' | 'desc' | null
+  ) {
+    if (this.loading) return
+
+    this.sortBy = sortBy
+    this.sortOrder = sortOrder
+    this.products = []
+    this.page = 1
+    this.hasMore = true
+    this.activeCategory = null
+
+    await this.fetchProducts()
+  },
   async fetchByCategory(this: ProductActionContext, category: string) {
     if (!category || this.loading) return
 
@@ -50,6 +73,8 @@ export const actions = {
     this.page = 1
     this.hasMore = true
     this.activeCategory = category
+    this.sortBy = null
+    this.sortOrder = null
 
     try {
       const data = await productService.getProductsByCategory(category)
