@@ -37,12 +37,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-
-export default Vue.extend({
-  name: 'ContactInfo',
-})
+<script setup lang="ts">
 </script>
 
 <style lang="scss" scoped>
