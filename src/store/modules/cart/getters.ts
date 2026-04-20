@@ -1,9 +1,7 @@
-import { GetterTree } from 'vuex'
-import { RootState } from '@/types'
-import { CartItem, CartState, NormalizedCartItem } from '@/types/cart'
+import type { CartItem, CartState, NormalizedCartItem } from '@/types/cart'
 
-export const getters: GetterTree<CartState, RootState> = {
-  cartItems(state): NormalizedCartItem[] {
+export const getters = {
+  cartItems(state: CartState): NormalizedCartItem[] {
     return state.cart.map((item: CartItem) => ({
       id: item.product.id,
       title: item.product.title,
@@ -14,17 +12,11 @@ export const getters: GetterTree<CartState, RootState> = {
     }))
   },
 
-  totalItems(state, getters): number {
-    return getters.cartItems.reduce(
-      (sum: number, item: NormalizedCartItem) => sum + item.quantity,
-      0
-    )
+  totalItems(state: CartState): number {
+    return state.cart.reduce((sum, item) => sum + item.quantity, 0)
   },
 
-  cartTotal(state, getters): number {
-    return getters.cartItems.reduce(
-      (sum: number, item: NormalizedCartItem) => sum + item.lineTotal,
-      0
-    )
+  cartTotal(state: CartState): number {
+    return state.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   },
 }

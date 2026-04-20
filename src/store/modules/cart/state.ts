@@ -1,5 +1,6 @@
-import { CartState } from '@/types'
+import type { CartState } from '@/types/cart'
+import { loadCart } from './cartStorage'
 
-export const state: CartState = {
-  cart: JSON.parse(localStorage.getItem('cart') || '[]'),
-}
+export const createInitialState = (): CartState => ({
+  cart: loadCart(),
+})
