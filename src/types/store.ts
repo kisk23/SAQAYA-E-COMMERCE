@@ -7,3 +7,12 @@ export interface RootState {
   categories: string[]
   loadingProducts: boolean
 }
+
+export interface ProductState {
+  products: Product[]
+  page: number
+  loading: boolean
+  limit: number
+  hasMore: boolean
+  activeCategory: string | null
+}

@@ -1,15 +1,10 @@
-import { GetterTree } from 'vuex'
-import { ProductState } from './state'
-import { RootState } from '@/types'
+import type { ProductState } from '@/types'
 
-export const getters: GetterTree<ProductState, RootState> = {
-  products: (state) => state.products,
-  activeCategory: (state) => state.activeCategory,
-  getProductById: (state) => (id: number) => {
-    console.log('Getting product by ID:', id)
+export const getters = {
+  getProductById: (state: ProductState) => (id: number) => {
     return state.products.find((p) => p.id === id)
   },
-  getByCategory: (state) => (category: string) => {
+  getByCategory: (state: ProductState) => (category: string) => {
     return state.products.filter((p) => p.category === category)
   },
 }
