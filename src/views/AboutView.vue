@@ -1,7 +1,7 @@
 <template>
   <section class="about">
     <BreadCrumbs
-      :items="[{ label: 'Home', link: '/' }, { label: 'About' }]"
+      :items="[{ label: 'Home', link: '/' }, { label: 'About' , link: '/about' }]"
       class="about__breadcrumbs"
     />
     <AboutHeader />

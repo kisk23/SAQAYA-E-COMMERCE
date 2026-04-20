@@ -52,54 +52,41 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import type { Product } from '@/types'
 
-export default Vue.extend({
-  name: 'ProductMain',
+const props = defineProps<{
+  product: Product
+}>()
 
-  props: {
-    product: {
-      type: Object as () => Product,
-      required: true,
-    },
-  },
+const activeIndex = ref(0)
+const zooming = ref(false)
+const lensStyle = ref<Record<string, string>>({})
 
-  data() {
-    return {
-      activeIndex: 0,
-      zooming: false,
-      lensStyle: {} as Record<string, string>,
-    }
-  },
+const setActive = (index: number) => {
+  activeIndex.value = index
+}
 
-  methods: {
-    setActive(index: number) {
-      this.activeIndex = index
-    },
+const onMouseMove = (event: MouseEvent) => {
+  const container = event.currentTarget as HTMLElement
+  const rect = container.getBoundingClientRect()
 
-    onMouseMove(event: MouseEvent) {
-      const container = event.currentTarget as HTMLElement
-      const rect = container.getBoundingClientRect()
+  const x = ((event.clientX - rect.left) / rect.width) * 100
+  const y = ((event.clientY - rect.top) / rect.height) * 100
 
-      const x = ((event.clientX - rect.left) / rect.width) * 100
-      const y = ((event.clientY - rect.top) / rect.height) * 100
+  zooming.value = true
+  lensStyle.value = {
+    left: `${event.clientX - rect.left - 30}px`,
+    top: `${event.clientY - rect.top - 30}px`,
+    backgroundPosition: `${x}% ${y}%`,
+    backgroundImage: `url(${props.product.images[activeIndex.value]})`,
+  }
+}
 
-      this.zooming = true
-      this.lensStyle = {
-        left: `${event.clientX - rect.left - 30}px`,
-        top: `${event.clientY - rect.top - 30}px`,
-        backgroundPosition: `${x}% ${y}%`,
-        backgroundImage: `url(${this.product.images[this.activeIndex]})`,
-      }
-    },
-
-    onMouseLeave() {
-      this.zooming = false
-    },
-  },
-})
+const onMouseLeave = () => {
+  zooming.value = false
+}
 </script>
 
 <style lang="scss" scoped>

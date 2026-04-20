@@ -6,19 +6,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+defineProps<{
+  loading?: boolean
+}>()
 
-export default Vue.extend({
-  name: 'LoadMoreButton',
-
-  props: {
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-  },
-})
+defineEmits<{
+  (e: 'click'): void
+}>()
 </script>
 
 <style lang="scss" scoped>

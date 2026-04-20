@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <section class="products">
     <BreadCrumbs :items="productsBreadcrumbs" />
 
@@ -188,4 +188,4 @@ export default Vue.extend({
     margin: 16px auto;
   }
 }
-</style> -->
+</style>
