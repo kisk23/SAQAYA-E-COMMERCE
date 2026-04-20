@@ -2,9 +2,9 @@
   <nav class="breadcrumbs">
     <span v-for="(item, index) in items" :key="index" class="breadcrumbs__item">
       <span v-if="index !== items.length - 1">
-        <a :href="item.link" class="breadcrumbs__link">
+        <router-link :to="item.link" class="breadcrumbs__link">
           {{ item.label }}
-        </a>
+        </router-link>
         <span class="breadcrumbs__separator">/</span>
       </span>
 
@@ -19,11 +19,10 @@
 
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 
+
 defineProps<{
   items: BreadcrumbItem[]
 }>()
-
- 
 
 </script>
 

@@ -60,41 +60,40 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue, { PropType } from 'vue'
+<script setup lang="ts">
+import { computed, toRefs } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import type { Product } from '@/types'
-export default Vue.extend({
-  props: {
-    //this entire problem PropType<Product> disappears with defineProps vue3.
-    product: {
-      type: Object as PropType<Product>,
-      required: true,
-    },
-  },
-  computed: {
-    filledStars(): number {
-      return Math.floor(this.product.rating)
-    },
-  },
+import { useCartStore } from '@/store/modules/cart'
 
-  methods: {
-    addToCart() {
-      this.$store.commit('cart/addToCart', this.product)
-    },
-    goToProduct() {
-      const fromPath = this.$route.fullPath
-      const fromLabel = this.$route.name === 'products' ? 'Products' : 'Home'
+const { product } = toRefs(
+  defineProps<{
+    product: Product
+  }>()
+)
 
-      this.$router.push({
-        path: `/products/${this.product.id}`,
-        query: {
-          from: fromPath,
-          fromLabel,
-        },
-      })
+const cartStore = useCartStore()
+const route = useRoute()
+const router = useRouter()
+
+const filledStars = computed(() => Math.floor(product.value.rating))
+
+const addToCart = () => {
+  cartStore.addToCart(product.value)
+}
+
+const goToProduct = () => {
+  const fromPath = route.fullPath
+  const fromLabel = route.name === 'products' ? 'Products' : 'Home'
+
+  router.push({
+    path: `/products/${product.value.id}`,
+    query: {
+      from: fromPath,
+      fromLabel,
     },
-  },
-})
+  })
+}
 </script>
 
 <style lang="scss" scoped>
