@@ -75,43 +75,40 @@
   </div>
 </template>
 
-<script  lang="ts" >
-import Vue from 'vue'
-import type { NormalizedCartItem } from '@/types/cart'
+<script setup lang="ts" >
+import { computed } from 'vue' 
+
 import { formatPrice } from '@/utils/format'
-export default Vue.extend({
-  name: 'CartDrawer',
-  props: {
-    isOpen: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-  },
-  computed: {
-    cartItems(): NormalizedCartItem[] {
-      return this.$store.getters['cart/cartItems'] as NormalizedCartItem[]
-    },
-    totalItems(): number {
-      return this.$store.getters['cart/totalItems']
-    },
-    cartTotal() {
-      return this.$store.getters['cart/cartTotal']
-    },
-  },
-  methods: {
-    increase(productId: number): void {
-      this.$store.commit('cart/incrementCartItem', productId)
-    },
-    decrease(productId: number): void {
-      this.$store.commit('cart/decreaseCartItem', productId)
-    },
-    remove(productId: number): void {
-      this.$store.commit('cart/removeFromCart', productId)
-    },
-    formatPrice,
-  },
-})
+import { useCartStore } from '@/store/modules/cart'
+const cartStore = useCartStore()
+
+
+defineProps<{
+  isOpen: boolean
+}>()
+
+  const cartItems = computed(() => {
+    return cartStore.cartItems
+  })
+
+  const cartTotal = computed(() => {
+    return cartStore.cartTotal
+  })
+
+
+   const  increase=(productId: number): void => {
+      cartStore. incrementCartItem(productId)
+    }
+
+  const  decrease=(productId: number): void=> {
+      cartStore.decreaseCartItem(productId)
+    }
+
+   const remove =(productId: number): void => {
+      cartStore.removeFromCart(productId)
+    }
+   
+
 </script>
 
 <style lang="scss" scoped>
