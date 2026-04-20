@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="contact">
     <div class="contact__breadcrumbs">
       <Breadcrumbs :items="breadcrumbs" />
@@ -89,4 +89,4 @@ export default Vue.extend({
     gap: 16px;
   }
 }
-</style>
+</style> -->

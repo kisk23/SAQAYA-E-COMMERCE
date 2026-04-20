@@ -1,8 +1,10 @@
-import { NavigationGuard } from 'vue-router'
-import store from '@/store'
+import type{ NavigationGuard } from 'vue-router'
+import pinia from '@/store'
+import { useProductStore } from '@/store/modules/product'
 
-export const ensureProductsLoaded: NavigationGuard = async (to, from, next) => {
+export const ensureProductsLoaded: NavigationGuard = async (to) => {
   try {
+    const productStore = useProductStore(pinia)
     const queryCategory =
       typeof to.query.category === 'string'
         ? to.query.category.trim()
@@ -11,25 +13,25 @@ export const ensureProductsLoaded: NavigationGuard = async (to, from, next) => {
           : ''
 
     if (to.name === 'products' && queryCategory) {
-      next()
-      return
+      return true
     }
 
-    if (!store.getters['product/products'].length) {
-      await store.dispatch('product/fetchProducts')
+    if (!productStore.products.length) {
+      await productStore.fetchProducts()
     }
-    next()
+
+    return true
   } catch (e) {
-    next(false)
+    return false
   }
 }
 
-export const validateProductId: NavigationGuard = async (to, from, next) => {
+export const validateProductId: NavigationGuard = async (to) => {
   const id = Number(to.params.id)
 
   if (!Number.isInteger(id) || id < 1 || id > 100) {
-    return next({ name: 'not-found' })
+    return { name: 'not-found' }
   }
 
-  next()
+  return true
 }

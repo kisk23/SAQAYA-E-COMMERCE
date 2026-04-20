@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import { createRouter, createWebHistory} from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 import MainLayout from '@/layouts/MainLayout.vue'
 import HomeView from '@/views/HomeView.vue'
@@ -10,9 +10,7 @@ import ProductsView from '@/views/products/list/ProductsView.vue'
 import ProductView from '@/views/products/detail/ProductView.vue'
 import { ensureProductsLoaded, validateProductId } from './guards'
 
-Vue.use(VueRouter)
-
-const routes: Array<RouteConfig> = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     component: MainLayout,
@@ -47,7 +45,7 @@ const routes: Array<RouteConfig> = [
         component: ContactView,
       },
       {
-        path: '*',
+        path: ':pathMatch(.*)*',
         name: 'not-found',
         component: NotFoundView,
       },
@@ -55,8 +53,8 @@ const routes: Array<RouteConfig> = [
   },
 ]
 
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
   routes,
 })
 

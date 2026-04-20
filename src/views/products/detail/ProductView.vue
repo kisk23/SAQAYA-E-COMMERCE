@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <section class="product-view">
     <BreadCrumbs :items="productBreadcrumbs" />
 
@@ -146,4 +146,4 @@ export default Vue.extend({
     gap: 24px;
   }
 }
-</style>
+</style> -->

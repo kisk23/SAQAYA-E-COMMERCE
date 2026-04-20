@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="notfound">
     <div class="notfound__breadcrumbs">
       <Breadcrumbs :items="breadcrumbs" />
@@ -79,4 +79,4 @@ export default Vue.extend({
 .notfound__button:hover {
   opacity: 0.9;
 }
-</style>
+</style> -->

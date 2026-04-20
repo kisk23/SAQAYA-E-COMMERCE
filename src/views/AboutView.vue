@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <section class="about">
     <BreadCrumbs
       :items="[{ label: 'Home', link: '/' }, { label: 'About' }]"
@@ -68,4 +68,4 @@ export default Vue.extend({
 .about__breadcrumbs {
   margin: 40px;
 }
-</style>
+</style> -->
