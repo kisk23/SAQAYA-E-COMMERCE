@@ -1,27 +1,29 @@
-import { ActionTree } from 'vuex'
-import { RootState } from '@/types'
 import { categoryService } from '@/services/category.service'
-import { CategoryState } from './state'
 
-export const actions: ActionTree<CategoryState, RootState> = {
-  async fetchCategories({ state, commit }) {
-    if (state.loading) return
+interface CategoryActionContext {
+  categories: string[]
+  loading: boolean
+  selectedCategory: string | null
+}
 
-    commit('setLoading', true)
+export const actions = {
+  async fetchCategories(this: CategoryActionContext) {
+    if (this.loading) return
+
+    this.loading = true
     try {
       const response = await categoryService.getCategories()
-      console.log('Fetched categories:', response.data)
-      commit('setCategories', response.data)
+      this.categories = response.data
     } catch (err) {
       console.error('Fetch categories failed:', err)
     } finally {
-      commit('setLoading', false)
+      this.loading = false
     }
   },
-  setSelectedCategory({ commit }, category: string) {
-    commit('setSelectedCategory', category)
+  setSelectedCategory(this: CategoryActionContext, category: string) {
+    this.selectedCategory = category
   },
-  clearSelectedCategory({ commit }) {
-    commit('clearSelectedCategory')
+  clearSelectedCategory(this: CategoryActionContext) {
+    this.selectedCategory = null
   },
 }
