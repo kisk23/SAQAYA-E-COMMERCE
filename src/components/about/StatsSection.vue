@@ -17,32 +17,29 @@
 </template>
 
 <script setup lang="ts">
-
-
-  const stats= [
-        {
-          value: '10.5k',
-          title: 'Sellers active on site',
-          icon: require('@/assets/icons/store.svg'),
-        },
-        {
-          value: '33k',
-          title: 'Monthly Product Sale',
-          icon: require('@/assets/icons/dollar.svg'),
-          highlight: true,
-        },
-        {
-          value: '45.5k',
-          title: 'Customers active on site',
-          icon: require('@/assets/icons/bag.svg'),
-        },
-        {
-          value: '25k',
-          title: 'Annual gross sale on site',
-          icon: require('@/assets/icons/money.svg'),
-        },
-      ]
- 
+const stats = [
+  {
+    value: '10.5k',
+    title: 'Sellers active on site',
+    icon: require('@/assets/icons/store.svg'),
+  },
+  {
+    value: '33k',
+    title: 'Monthly Product Sale',
+    icon: require('@/assets/icons/dollar.svg'),
+    highlight: true,
+  },
+  {
+    value: '45.5k',
+    title: 'Customers active on site',
+    icon: require('@/assets/icons/bag.svg'),
+  },
+  {
+    value: '25k',
+    title: 'Annual gross sale on site',
+    icon: require('@/assets/icons/money.svg'),
+  },
+]
 </script>
 
 <style lang="scss" scoped>

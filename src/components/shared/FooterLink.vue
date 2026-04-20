@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-
 defineProps<{
   label: string
   link: string

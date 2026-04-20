@@ -9,7 +9,6 @@
 defineProps<{
   label: string
 }>()
-
 </script>
 
 <style lang="scss" scoped>

@@ -7,12 +7,8 @@
 
       <nav :class="['header__nav', { 'header__nav--open': isMenuOpen }]">
         <router-link class="header__link" to="/" @click="closeMenu">Home</router-link>
-        <router-link class="header__link" to="/contact" @click="closeMenu"
-          >Contact</router-link
-        >
-        <router-link class="header__link" to="/products" @click="closeMenu"
-          >Products</router-link
-        >
+        <router-link class="header__link" to="/contact" @click="closeMenu">Contact</router-link>
+        <router-link class="header__link" to="/products" @click="closeMenu">Products</router-link>
         <router-link class="header__link" to="/about" @click="closeMenu">About</router-link>
       </nav>
 
@@ -50,15 +46,12 @@
 </template>
 
 <script setup lang="ts">
-
 import CartDrawer from '@/components/cart/CartDrawer.vue'
-import { ref ,computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useCartStore } from '@/store/modules/cart'
 
 const isMenuOpen = ref(false)
 const isCartOpen = ref(false)
-
-
 
 const cartStore = useCartStore()
 
@@ -75,8 +68,6 @@ const toggleMenu = () => {
 const closeMenu = () => {
   isMenuOpen.value = false
 }
-
-
 </script>
 <style lang="scss" scoped>
 .header {

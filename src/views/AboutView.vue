@@ -1,11 +1,14 @@
 <template>
   <section class="about">
     <BreadCrumbs
-      :items="[{ label: 'Home', link: '/' }, { label: 'About' , link: '/about' }]"
+      :items="[
+        { label: 'Home', link: '/' },
+        { label: 'About', link: '/about' },
+      ]"
       class="about__breadcrumbs"
     />
     <AboutHeader />
-    <StatsSection  />
+    <StatsSection />
     <TeamCarousel />
     <FeaturesBar />
   </section>

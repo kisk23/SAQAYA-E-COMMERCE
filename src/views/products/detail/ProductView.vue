@@ -18,8 +18,9 @@
   </section>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import type { Product } from '@/types'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
 import ProductMain from '@/components/product-detail/ProductMain.vue'
@@ -28,82 +29,67 @@ import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
 import { productService } from '@/services/product.service'
 import MoreofCategory from '@/components/product-detail/MoreofCategory.vue'
 
-export default Vue.extend({
-  name: 'ProductView',
+const route = useRoute()
+const loading = ref(false)
+const error = ref(false)
+const product = ref<Product | null>(null)
 
-  components: {
-    ProductMain,
-    ProductInfo,
-    BreadCrumbs,
-    MoreofCategory,
-  },
+const getSingleQueryValue = (value: unknown): string | null => {
+  if (typeof value === 'string') return value
+  if (Array.isArray(value) && typeof value[0] === 'string') return value[0]
+  return null
+}
 
-  data(): { loading: boolean; error: boolean; product: Product | null } {
-    return {
-      loading: false,
-      error: false,
-      product: null,
-    }
-  },
+const productBreadcrumbs = computed<BreadcrumbItem[]>(() => {
+  const fromPath = getSingleQueryValue(route.query.from) ?? '/products'
+  const fromLabel = getSingleQueryValue(route.query.fromLabel) ?? 'Products'
 
-  computed: {
-    productBreadcrumbs(): BreadcrumbItem[] {
-      const fromPath =
-        typeof this.$route.query.from === 'string' ? this.$route.query.from : '/products'
-      const fromLabel =
-        typeof this.$route.query.fromLabel === 'string' ? this.$route.query.fromLabel : 'Products'
+  const breadcrumbs: BreadcrumbItem[] = [{ label: 'Home', link: '/' }]
 
-      const breadcrumbs: BreadcrumbItem[] = [{ label: 'Home', link: '/' }]
+  if (fromPath !== '/') {
+    breadcrumbs.push({ label: fromLabel, link: fromPath })
+  }
 
-      if (fromPath !== '/') {
-        breadcrumbs.push({ label: fromLabel, link: fromPath })
-      }
+  breadcrumbs.push({ label: product.value?.title || 'Product', link: '' })
 
-      breadcrumbs.push({ label: this.product?.title || 'Product' })
-
-      return breadcrumbs
-    },
-  },
-
-  created() {
-    this.fetchProductByRouteParam(this.$route.params.id)
-  },
-
-  async beforeRouteUpdate(to, _from, next) {
-    await this.fetchProductByRouteParam(to.params.id)
-    next()
-  },
-
-  methods: {
-    async fetchProductByRouteParam(rawId: string | number): Promise<void> {
-      const id = Number(rawId)
-
-      if (!Number.isFinite(id) || id <= 0) {
-        this.product = null
-        this.error = false
-        this.loading = false
-        return
-      }
-
-      this.loading = true
-      this.error = false
-
-      try {
-        this.product = await productService.getProductById(id)
-        console.log('Product:', this.product)
-      } catch {
-        this.product = null
-        this.error = true
-      } finally {
-        this.loading = false
-      }
-    },
-
-    handleBuyNow({ product, qty }: { product: Product; qty: number }): void {
-      console.log(product, qty)
-    },
-  },
+  return breadcrumbs
 })
+
+const fetchProductByRouteParam = async (rawId: unknown): Promise<void> => {
+  const raw = Array.isArray(rawId) ? rawId[0] : rawId
+  const id = Number(raw)
+
+  if (!Number.isFinite(id) || id <= 0) {
+    product.value = null
+    error.value = false
+    loading.value = false
+    return
+  }
+
+  loading.value = true
+  error.value = false
+
+  try {
+    product.value = await productService.getProductById(id)
+  } catch {
+    product.value = null
+    error.value = true
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleBuyNow = ({ product, qty }: { product: Product; qty: number }): void => {
+  console.log(product, qty)
+}
+
+watch(
+  () => route.params.id,
+  async (id) => {
+    await fetchProductByRouteParam(id)
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>

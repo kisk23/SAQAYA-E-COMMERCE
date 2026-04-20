@@ -86,9 +86,7 @@
 </template>
 
 <script setup lang="ts">
-
 import FooterLink from '@/components/shared/FooterLink.vue'
-
 </script>
 
 <style lang="scss" scoped>

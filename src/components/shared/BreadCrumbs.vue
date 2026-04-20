@@ -16,14 +16,11 @@
 </template>
 
 <script setup lang="ts">
-
 import type { BreadcrumbItem } from '@/types/breadcrumb'
-
 
 defineProps<{
   items: BreadcrumbItem[]
 }>()
-
 </script>
 
 <style lang="scss" scoped>

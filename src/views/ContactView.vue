@@ -17,22 +17,16 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
 import Breadcrumbs from '@/components/shared/BreadCrumbs.vue'
 import ContactInfo from '@/components/contact/ContactInfo.vue'
 import ContactForm from '@/components/contact/ContactForm.vue'
+import type { BreadcrumbItem } from '@/types/breadcrumb'
 
-export default Vue.extend({
-  name: 'ContactView',
-  components: { Breadcrumbs, ContactInfo, ContactForm },
-
-  data() {
-    return {
-      breadcrumbs: [{ label: 'Home', link: '/' }, { label: 'Contact' }],
-    }
-  },
-})
+const breadcrumbs: BreadcrumbItem[] = [
+  { label: 'Home', link: '/' },
+  { label: 'Contact', link: '' },
+]
 </script>
 <style lang="scss" scoped>
 .contact {

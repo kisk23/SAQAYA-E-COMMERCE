@@ -75,40 +75,36 @@
   </div>
 </template>
 
-<script setup lang="ts" >
-import { computed } from 'vue' 
+<script setup lang="ts">
+import { computed } from 'vue'
 
 import { formatPrice } from '@/utils/format'
 import { useCartStore } from '@/store/modules/cart'
 const cartStore = useCartStore()
 
-
 defineProps<{
   isOpen: boolean
 }>()
 
-  const cartItems = computed(() => {
-    return cartStore.cartItems
-  })
+const cartItems = computed(() => {
+  return cartStore.cartItems
+})
 
-  const cartTotal = computed(() => {
-    return cartStore.cartTotal
-  })
+const cartTotal = computed(() => {
+  return cartStore.cartTotal
+})
 
+const increase = (productId: number): void => {
+  cartStore.incrementCartItem(productId)
+}
 
-   const  increase=(productId: number): void => {
-      cartStore. incrementCartItem(productId)
-    }
+const decrease = (productId: number): void => {
+  cartStore.decreaseCartItem(productId)
+}
 
-  const  decrease=(productId: number): void=> {
-      cartStore.decreaseCartItem(productId)
-    }
-
-   const remove =(productId: number): void => {
-      cartStore.removeFromCart(productId)
-    }
-   
-
+const remove = (productId: number): void => {
+  cartStore.removeFromCart(productId)
+}
 </script>
 
 <style lang="scss" scoped>

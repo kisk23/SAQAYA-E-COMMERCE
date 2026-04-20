@@ -14,153 +14,138 @@
   </section>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
 import ProductsHeader from '@/components/product/ProductHeader.vue'
 import ProductsList from '@/components/product/ProductList.vue'
 import LoadMoreButton from '@/components/product/LoadMore.vue'
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
 import type { Product } from '@/types'
 import type { BreadcrumbItem } from '@/types/breadcrumb'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useProductStore } from '@/store/modules/product'
+import { useCategoryStore } from '@/store/modules/category'
 
 const SORT_OPTIONS = ['Highest Rating', 'Price: Low to High', 'Price: High to Low'] as const
 
 type SortOption = (typeof SORT_OPTIONS)[number]
 
-export default Vue.extend({
-  name: 'ProductsView',
+const route = useRoute()
+const router = useRouter()
+const productStore = useProductStore()
+const categoryStore = useCategoryStore()
 
-  components: {
-    ProductsHeader,
-    ProductsList,
-    LoadMoreButton,
-    BreadCrumbs,
-  },
+const sortBy = ref<SortOption>('Highest Rating')
 
-  data() {
-    return {
-      sortBy: 'Highest Rating' as SortOption,
-    }
-  },
+const getSingleQueryValue = (value: unknown): string | null => {
+  if (typeof value === 'string') return value
+  if (Array.isArray(value) && typeof value[0] === 'string') return value[0]
+  return null
+}
 
-  computed: {
-    productsBreadcrumbs(): BreadcrumbItem[] {
-      const homePath =
-        typeof this.$route.query.homePath === 'string' ? this.$route.query.homePath : '/'
-      const homeLabel =
-        typeof this.$route.query.homeLabel === 'string' ? this.$route.query.homeLabel : 'Home'
+const parseCategoryQuery = (value: unknown): string => {
+  const single = getSingleQueryValue(value)
+  return single ? single.trim() : ''
+}
 
-      return [{ label: homeLabel, link: homePath }, { label: 'Products' }]
-    },
-    products(): Product[] {
-      return this.$store.state.product.products as Product[]
-    },
-    activeCategory(): string | null {
-      return this.$store.getters['product/activeCategory'] as string | null
-    },
-    selectedCategory(): string | null {
-      return this.$store.getters['category/selectedCategory'] as string | null
-    },
-    isCategoryMode(): boolean {
-      return Boolean(this.selectedCategory)
-    },
-    sortedProducts(): Product[] {
-      const sorted = [...this.products]
+const isSortOption = (value: unknown): value is SortOption => {
+  return typeof value === 'string' && (SORT_OPTIONS as readonly string[]).includes(value)
+}
 
-      if (this.sortBy === 'Price: Low to High') {
-        return sorted.sort((a, b) => a.price - b.price)
-      }
+const productsBreadcrumbs = computed<BreadcrumbItem[]>(() => {
+  const homePath = getSingleQueryValue(route.query.homePath) ?? '/'
+  const homeLabel = getSingleQueryValue(route.query.homeLabel) ?? 'Home'
 
-      if (this.sortBy === 'Price: High to Low') {
-        return sorted.sort((a, b) => b.price - a.price)
-      }
-
-      return sorted.sort((a, b) => b.rating - a.rating)
-    },
-    loading() {
-      return this.$store.state.product.loading
-    },
-    hasMore() {
-      return this.$store.state.product.hasMore
-    },
-  },
-
-  created() {
-    const querySort = this.$route.query.sort
-    if (this.isSortOption(querySort)) {
-      this.sortBy = querySort
-    }
-
-    this.syncProductsWithRoute(this.$route.query.category)
-  },
-
-  watch: {
-    '$route.query.sort': {
-      immediate: false,
-      handler(value: unknown) {
-        if (this.isSortOption(value)) {
-          this.sortBy = value
-        }
-      },
-    },
-    '$route.query.category': {
-      immediate: false,
-      handler(value: unknown) {
-        this.syncProductsWithRoute(value)
-      },
-    },
-  },
-
-  methods: {
-    loadMore() {
-      this.$store.dispatch('product/loadMore')
-    },
-    handleSortChange(option: string) {
-      if (!this.isSortOption(option)) return
-
-      this.sortBy = option
-      this.$router
-        .replace({
-          query: {
-            ...this.$route.query,
-            sort: option,
-          },
-        })
-        .catch(() => undefined)
-    },
-    isSortOption(value: unknown): value is SortOption {
-      return typeof value === 'string' && (SORT_OPTIONS as readonly string[]).includes(value)
-    },
-    parseCategoryQuery(value: unknown): string {
-      if (typeof value === 'string') return value.trim()
-      if (Array.isArray(value) && typeof value[0] === 'string') return value[0].trim()
-      return ''
-    },
-    async syncProductsWithRoute(rawCategory: unknown): Promise<void> {
-      const category = this.parseCategoryQuery(rawCategory)
-
-      if (category) {
-        this.$store.dispatch('category/setSelectedCategory', category)
-
-        if (this.activeCategory !== category || !this.products.length) {
-          await this.$store.dispatch('product/fetchByCategory', category)
-        }
-
-        return
-      }
-
-      this.$store.dispatch('category/clearSelectedCategory')
-
-      if (this.activeCategory !== null) {
-        await this.$store.dispatch('product/prepareDefaultListing')
-      }
-
-      if (!this.products.length) {
-        await this.$store.dispatch('product/fetchProducts')
-      }
-    },
-  },
+  return [
+    { label: homeLabel, link: homePath },
+    { label: 'Products', link: '/products' },
+  ]
 })
+
+const products = computed<Product[]>(() => productStore.products)
+const activeCategory = computed<string | null>(() => productStore.activeCategory)
+const selectedCategory = computed<string | null>(() => categoryStore.selectedCategory)
+const isCategoryMode = computed<boolean>(() => Boolean(selectedCategory.value))
+const loading = computed<boolean>(() => productStore.loading)
+const hasMore = computed<boolean>(() => productStore.hasMore)
+
+const sortedProducts = computed<Product[]>(() => {
+  const sorted = [...products.value]
+
+  if (sortBy.value === 'Price: Low to High') {
+    return sorted.sort((a, b) => a.price - b.price)
+  }
+
+  if (sortBy.value === 'Price: High to Low') {
+    return sorted.sort((a, b) => b.price - a.price)
+  }
+
+  return sorted.sort((a, b) => b.rating - a.rating)
+})
+
+const loadMore = (): void => {
+  productStore.loadMore()
+}
+
+const handleSortChange = (option: string): void => {
+  if (!isSortOption(option)) return
+
+  sortBy.value = option
+  router
+    .replace({
+      query: {
+        ...route.query,
+        sort: option,
+      },
+    })
+    .catch(() => undefined)
+}
+
+const syncProductsWithRoute = async (rawCategory: unknown): Promise<void> => {
+  const category = parseCategoryQuery(rawCategory)
+
+  if (category) {
+    categoryStore.setSelectedCategory(category)
+
+    if (activeCategory.value !== category || !products.value.length) {
+      await productStore.fetchByCategory(category)
+    }
+
+    return
+  }
+
+  categoryStore.clearSelectedCategory()
+
+  if (activeCategory.value !== null) {
+    productStore.prepareDefaultListing()
+  }
+
+  if (!products.value.length) {
+    await productStore.fetchProducts()
+  }
+}
+
+const initialSort = getSingleQueryValue(route.query.sort)
+if (isSortOption(initialSort)) {
+  sortBy.value = initialSort
+}
+
+watch(
+  () => route.query.sort,
+  (value) => {
+    if (isSortOption(value)) {
+      sortBy.value = value
+    }
+  }
+)
+
+watch(
+  () => route.query.category,
+  async (value) => {
+    await syncProductsWithRoute(value)
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>

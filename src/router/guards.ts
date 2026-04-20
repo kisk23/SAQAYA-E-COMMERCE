@@ -1,4 +1,4 @@
-import type{ NavigationGuard } from 'vue-router'
+import type { NavigationGuard } from 'vue-router'
 import pinia from '@/store'
 import { useProductStore } from '@/store/modules/product'
 

@@ -66,11 +66,10 @@ import { useRoute, useRouter } from 'vue-router'
 import type { Product } from '@/types'
 import { useCartStore } from '@/store/modules/cart'
 
-const { product } = toRefs(
-  defineProps<{
-    product: Product
-  }>()
-)
+const props = defineProps<{
+  product: Product
+}>()
+const { product } = toRefs(props)
 
 const cartStore = useCartStore()
 const route = useRoute()

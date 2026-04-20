@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-const title = 'Our Story' 
+const title = 'Our Story'
 </script>
 
 <style lang="scss" scoped>
