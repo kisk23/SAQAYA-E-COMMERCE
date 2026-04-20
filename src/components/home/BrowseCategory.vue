@@ -27,53 +27,40 @@
   </section>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import TodayBadge from '@/components/shared/TodayBadge.vue'
+import type { MappedCategory } from '@/types'
+import { useCategoryStore } from '@/store/modules/category'
 
-interface MappedCategory {
-  id: string
-  name: string
-  icon: string
-}
+const categoryStore = useCategoryStore()
+const router = useRouter()
+const route = useRoute()
 
-export default Vue.extend({
-  name: 'BrowseCategory',
-  computed: {
-    mappedCategories(): MappedCategory[] {
-      return this.$store.getters['category/mappedCategories'] as MappedCategory[]
-    },
-    loading(): boolean {
-      return this.$store.state.category.loading
-    },
-    selectedCategory(): string | null {
-      return this.$store.getters['category/selectedCategory'] as string | null
-    },
-  },
-  components: {
-    TodayBadge,
-  },
-  created() {
-    if (!this.$store.getters['category/categories'].length) {
-      this.$store.dispatch('category/fetchCategories')
-    }
-  },
-  methods: {
-    handleCategorySelect(categoryId: string): void {
-      this.$store.dispatch('category/setSelectedCategory', categoryId)
-      this.$router
-        .push({
-          path: '/products',
-          query: {
-            category: categoryId,
-            homePath: this.$route.fullPath,
-            homeLabel: 'Home',
-          },
-        })
-        .catch(() => undefined)
-    },
-  },
+const mappedCategories = computed(() => categoryStore.mappedCategories as MappedCategory[])
+const loading = computed(() => categoryStore.loading)
+const selectedCategory = computed(() => categoryStore.selectedCategory)
+
+onMounted(() => {
+  if (!categoryStore.categories.length) {
+    categoryStore.fetchCategories()
+  }
 })
+
+const handleCategorySelect = (categoryId: string): void => {
+  categoryStore.setSelectedCategory(categoryId)
+  router
+    .push({
+      path: '/products',
+      query: {
+        category: categoryId,
+        homePath: route.fullPath,
+        homeLabel: 'Home',
+      },
+    })
+    .catch(() => undefined)
+}
 </script>
 
 <style lang="scss" scoped>
