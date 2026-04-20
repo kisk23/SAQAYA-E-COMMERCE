@@ -37,18 +37,18 @@
       <div class="product-info__quantity">
         <button
           class="product-info__quantity-btn"
-          @click="decrement"
           :disabled="qty <= 1"
           aria-label="Decrease quantity"
+          @click="decrement"
         >
           −
         </button>
         <span class="product-info__quantity-value">{{ qty }}</span>
         <button
           class="product-info__quantity-btn product-info__quantity-btn--colred"
-          @click="increment"
           :disabled="qty >= product.stock"
           aria-label="Increase quantity"
+          @click="increment"
         >
           +
         </button>
@@ -59,8 +59,8 @@
       <button
         class="product-info__wishlist-btn"
         :class="{ 'product-info__wishlist-btn--active': wishlisted }"
-        @click="wishlisted = !wishlisted"
         aria-label="Add to wishlist"
+        @click="wishlisted = !wishlisted"
       >
         <img src="@/assets/icons/wishlist.svg" alt="Wishlist" />
       </button>

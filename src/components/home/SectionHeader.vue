@@ -3,8 +3,8 @@
     <h2 class="section-header__title">{{ title }}</h2>
 
     <div class="section-header__controls">
-      <button @click="emit('prev')" class="section-header__btn">&larr;</button>
-      <button @click="emit('next')" class="section-header__btn">&rarr;</button>
+      <button class="section-header__btn" @click="emit('prev')">&larr;</button>
+      <button class="section-header__btn" @click="emit('next')">&rarr;</button>
     </div>
   </div>
 </template>

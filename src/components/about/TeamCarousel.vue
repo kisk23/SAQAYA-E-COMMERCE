@@ -35,6 +35,9 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 import type { Member } from '@/types'
+import team1 from '@/assets/images/team1.png'
+import team2 from '@/assets/images/team2.png'
+import team3 from '@/assets/images/team3.png'
 
 const teamSwiper = ref<HTMLElement | null>(null)
 let swiperInstance: Swiper | null = null
@@ -44,31 +47,31 @@ const members: Member[] = [
     id: 1,
     name: 'Tom Cruise',
     role: 'Founder & Chairman',
-    image: require('@/assets/images/team1.png'),
+    image: team1,
   },
   {
     id: 2,
     name: 'Emma Watson',
     role: 'Managing Director',
-    image: require('@/assets/images/team2.png'),
+    image: team2,
   },
   {
     id: 3,
     name: 'Will Smith',
     role: 'Product Designer',
-    image: require('@/assets/images/team3.png'),
+    image: team3,
   },
   {
     id: 4,
     name: 'Will Smith',
     role: 'Product Designer',
-    image: require('@/assets/images/team3.png'),
+    image: team1,
   },
   {
     id: 5,
     name: 'Will Smith',
     role: 'Product Designer',
-    image: require('@/assets/images/team3.png'),
+    image: team2,
   },
 ]
 

@@ -21,7 +21,7 @@ export const ensureProductsLoaded: NavigationGuard = async (to) => {
     }
 
     return true
-  } catch (e) {
+  } catch {
     return false
   }
 }

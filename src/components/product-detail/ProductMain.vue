@@ -6,9 +6,9 @@
         :key="image"
         class="product-gallery__thumbnail"
         :class="{ 'product-gallery__thumbnail--active': activeIndex === index }"
+        :aria-label="`View image ${index + 1}`"
         @click="setActive(index)"
         @mouseenter="setActive(index)"
-        :aria-label="`View image ${index + 1}`"
       >
         <img
           :src="image"
@@ -26,7 +26,7 @@
         :style="lensStyle"
       ></div>
 
-      <div class="product-gallery__badge" v-if="product.availabilityStatus === 'Low Stock'">
+      <div v-if="product.availabilityStatus === 'Low Stock'" class="product-gallery__badge">
         <span class="product-gallery__badge-text">Low Stock</span>
       </div>
 

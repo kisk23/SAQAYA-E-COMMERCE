@@ -33,7 +33,7 @@
             <span class="header__badge">{{ cartCount }}</span>
           </button>
 
-          <CartDrawer :isOpen="isCartOpen" @close="isCartOpen = false" />
+          <CartDrawer :is-open="isCartOpen" @close="isCartOpen = false" />
         </div>
         <button class="header__hamburger" @click="toggleMenu">
           <span></span>

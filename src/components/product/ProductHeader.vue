@@ -5,7 +5,7 @@
     <div class="products-header__controls">
       <label class="products-header__label" data-test="sort-label">Sort by</label>
 
-      <div class="dropdown" ref="dropdown" @click.stop="toggle" data-test="dropdown">
+      <div ref="dropdown" class="dropdown" data-test="dropdown" @click.stop="toggle">
         <div class="dropdown__selected" data-test="dropdown-selected">
           {{ selected }}
         </div>

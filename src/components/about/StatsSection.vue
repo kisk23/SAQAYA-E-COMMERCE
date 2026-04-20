@@ -1,9 +1,9 @@
 <template>
   <div class="features">
     <div
-      class="features__item"
       v-for="item in stats"
       :key="item.title"
+      class="features__item"
       :class="{ 'features__item--highlight': item.highlight }"
     >
       <div class="features__icon">
@@ -17,27 +17,31 @@
 </template>
 
 <script setup lang="ts">
+import storeIcon from '@/assets/icons/store.svg'
+import dollarIcon from '@/assets/icons/dollar.svg'
+import bagIcon from '@/assets/icons/bag.svg'
+import moneyIcon from '@/assets/icons/money.svg'
 const stats = [
   {
     value: '10.5k',
     title: 'Sellers active on site',
-    icon: require('@/assets/icons/store.svg'),
+    icon: storeIcon,
   },
   {
     value: '33k',
     title: 'Monthly Product Sale',
-    icon: require('@/assets/icons/dollar.svg'),
+    icon: dollarIcon,
     highlight: true,
   },
   {
     value: '45.5k',
     title: 'Customers active on site',
-    icon: require('@/assets/icons/bag.svg'),
+    icon: bagIcon,
   },
   {
     value: '25k',
     title: 'Annual gross sale on site',
-    icon: require('@/assets/icons/money.svg'),
+    icon: moneyIcon,
   },
 ]
 </script>
