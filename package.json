@@ -53,7 +53,7 @@
       "sourceType": "module"
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended",
       "prettier"

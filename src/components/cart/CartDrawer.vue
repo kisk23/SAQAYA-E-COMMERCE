@@ -75,7 +75,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script  lang="ts" >
 import Vue from 'vue'
 import type { NormalizedCartItem } from '@/types/cart'
 import { formatPrice } from '@/utils/format'
