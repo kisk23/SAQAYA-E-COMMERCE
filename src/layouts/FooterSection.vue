@@ -85,13 +85,10 @@
   </footer>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+
 import FooterLink from '@/components/shared/FooterLink.vue'
-export default Vue.extend({
-  name: 'FooterSection',
-  components: { FooterLink },
-})
+
 </script>
 
 <style lang="scss" scoped>

@@ -10,13 +10,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
 import HeaderSection from '@/layouts/HeaderSection.vue'
 import FooterSection from '@/layouts/FooterSection.vue'
-
-export default Vue.extend({
-  name: 'MainLayout',
-  components: { HeaderSection, FooterSection },
-})
 </script>
