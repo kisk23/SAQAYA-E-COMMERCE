@@ -11,7 +11,7 @@ import type { CartItem } from '@/types/cart'
 const mockedSaveCart = saveCart as jest.MockedFunction<typeof saveCart>
 
 const makeProduct = (id: number): Product =>
-  ({ id, title: `P${id}`, price: 50, thumbnail: 'img.jpg' } as unknown as Product)
+  ({ id, title: `P${id}`, price: 50, thumbnail: 'img.jpg' }) as unknown as Product
 
 type CartActionCtx = {
   cart: CartItem[]

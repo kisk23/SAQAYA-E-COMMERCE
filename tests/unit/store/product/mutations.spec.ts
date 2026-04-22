@@ -2,7 +2,7 @@ import { actions } from '@/store/modules/product/actions'
 import type { Product } from '@/types'
 
 const makeProduct = (id: number, category = 'phones'): Product =>
-  ({ id, title: `Product ${id}`, price: 100, category } as unknown as Product)
+  ({ id, title: `Product ${id}`, price: 100, category }) as unknown as Product
 
 type ProductActionCtx = {
   products: Product[]

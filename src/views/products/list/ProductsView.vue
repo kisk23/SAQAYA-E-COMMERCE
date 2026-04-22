@@ -23,6 +23,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProductStore } from '@/store/modules/product'
 import { useCategoryStore } from '@/store/modules/category'
+import { getSingleQueryValue } from '@/utils/query'
 
 const SORT_OPTIONS = ['Highest Rating', 'Price: Low to High', 'Price: High to Low'] as const
 
@@ -39,12 +40,6 @@ const SORT_TO_API: Record<SortOption, { sortBy: string; order: ApiSortOrder }> =
   'Highest Rating': { sortBy: 'rating', order: 'desc' },
   'Price: Low to High': { sortBy: 'price', order: 'asc' },
   'Price: High to Low': { sortBy: 'price', order: 'desc' },
-}
-
-const getSingleQueryValue = (value: unknown): string | null => {
-  if (typeof value === 'string') return value
-  if (Array.isArray(value) && typeof value[0] === 'string') return value[0]
-  return null
 }
 
 const parseCategoryQuery = (value: unknown): string => {

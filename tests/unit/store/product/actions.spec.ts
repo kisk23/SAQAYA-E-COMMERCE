@@ -7,7 +7,7 @@ jest.mock('@/services/product.service')
 const mockedService = productService as jest.Mocked<typeof productService>
 
 const makeProduct = (id: number, category = 'phones'): Product =>
-  ({ id, title: `Product ${id}`, price: 100, category } as unknown as Product)
+  ({ id, title: `Product ${id}`, price: 100, category }) as unknown as Product
 
 type ProductActionCtx = {
   products: Product[]

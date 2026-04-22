@@ -14,7 +14,7 @@ const createState = (overrides: Partial<ProductState> = {}): ProductState => ({
 })
 
 const makeProduct = (id: number, category = 'phones'): Product =>
-  ({ id, title: `Product ${id}`, price: 100, category } as unknown as Product)
+  ({ id, title: `Product ${id}`, price: 100, category }) as unknown as Product
 
 describe('product/getters', () => {
   it('getProductById finds product or returns undefined', () => {

@@ -28,17 +28,12 @@ import ProductInfo from '@/components/product-detail/ProductInfo.vue'
 import BreadCrumbs from '@/components/shared/BreadCrumbs.vue'
 import { productService } from '@/services/product.service'
 import MoreofCategory from '@/components/product-detail/MoreofCategory.vue'
+import { getSingleQueryValue } from '@/utils/query'
 
 const route = useRoute()
 const loading = ref(false)
 const error = ref(false)
 const product = ref<Product | null>(null)
-
-const getSingleQueryValue = (value: unknown): string | null => {
-  if (typeof value === 'string') return value
-  if (Array.isArray(value) && typeof value[0] === 'string') return value[0]
-  return null
-}
 
 const productBreadcrumbs = computed<BreadcrumbItem[]>(() => {
   const fromPath = getSingleQueryValue(route.query.from) ?? '/products'

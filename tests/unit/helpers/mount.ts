@@ -24,7 +24,10 @@ interface SetupResult {
   get: GetFn
 }
 
-const normalizeMountOptions = (options: SetupOptions, pinia: ReturnType<typeof createTestingPinia>) => {
+const normalizeMountOptions = (
+  options: SetupOptions,
+  pinia: ReturnType<typeof createTestingPinia>
+) => {
   const normalized: Record<string, any> = { ...options }
   const global = { ...(options.global || {}) }
   const globalPlugins = [...(global.plugins || []), pinia]

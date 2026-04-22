@@ -3,7 +3,7 @@ import type { CartState } from '@/types/cart'
 import type { Product } from '@/types'
 
 const makeProduct = (id: number, price = 50): Product =>
-  ({ id, title: `P${id}`, price, thumbnail: 'img.jpg' } as unknown as Product)
+  ({ id, title: `P${id}`, price, thumbnail: 'img.jpg' }) as unknown as Product
 
 const createState = (items: { id: number; price?: number; qty: number }[] = []): CartState => ({
   cart: items.map(({ id, price, qty }) => ({ product: makeProduct(id, price), quantity: qty })),
