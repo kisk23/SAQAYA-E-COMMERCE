@@ -1,58 +1,61 @@
 import { actions } from '@/store/modules/category/actions'
 import { categoryService } from '@/services/category.service'
-import { AxiosResponse } from 'axios'
 
 jest.mock('@/services/category.service')
 
 const mockedService = categoryService as jest.Mocked<typeof categoryService>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ActionHandler = (ctx: any, payload?: any) => any
+type CategoryActionCtx = {
+  categories: string[]
+  loading: boolean
+  selectedCategory: string | null
+}
 
-const createContext = (stateOverrides = {}) => ({
-  state: { categories: [], loading: false, selectedCategory: null, ...stateOverrides },
-  commit: jest.fn(),
-  dispatch: jest.fn(),
-  getters: {},
-  rootState: {},
-  rootGetters: {},
+const createContext = (overrides: Partial<CategoryActionCtx> = {}): CategoryActionCtx => ({
+  categories: [],
+  loading: false,
+  selectedCategory: null,
+  ...overrides,
 })
 
 describe('category/actions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(console, 'log').mockImplementation()
-    jest.spyOn(console, 'error').mockImplementation()
+    jest.spyOn(console, 'error').mockImplementation(() => undefined)
   })
 
-  afterEach(() => jest.restoreAllMocks())
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
 
-  it('fetchCategories commits categories on success', async () => {
+  it('fetchCategories updates categories on success', async () => {
     const ctx = createContext()
     mockedService.getCategories.mockResolvedValue({
       data: ['beauty', 'furniture'],
-    } as AxiosResponse)
+    } as never)
 
-    await (actions.fetchCategories as ActionHandler)(ctx)
+    await actions.fetchCategories.call(ctx)
 
-    expect(ctx.commit).toHaveBeenCalledWith('setLoading', true)
-    expect(ctx.commit).toHaveBeenCalledWith('setCategories', ['beauty', 'furniture'])
-    expect(ctx.commit).toHaveBeenCalledWith('setLoading', false)
+    expect(mockedService.getCategories).toHaveBeenCalled()
+    expect(ctx.categories).toEqual(['beauty', 'furniture'])
+    expect(ctx.loading).toBe(false)
   })
 
   it('fetchCategories is guarded by loading', async () => {
     const ctx = createContext({ loading: true })
 
-    await (actions.fetchCategories as ActionHandler)(ctx)
+    await actions.fetchCategories.call(ctx)
 
-    expect(ctx.commit).not.toHaveBeenCalled()
+    expect(mockedService.getCategories).not.toHaveBeenCalled()
   })
 
-  it('setSelectedCategory commits the category', () => {
+  it('setSelectedCategory and clearSelectedCategory update selection', () => {
     const ctx = createContext()
 
-    ;(actions.setSelectedCategory as ActionHandler)(ctx, 'beauty')
+    actions.setSelectedCategory.call(ctx, 'beauty')
+    expect(ctx.selectedCategory).toBe('beauty')
 
-    expect(ctx.commit).toHaveBeenCalledWith('setSelectedCategory', 'beauty')
+    actions.clearSelectedCategory.call(ctx)
+    expect(ctx.selectedCategory).toBeNull()
   })
 })

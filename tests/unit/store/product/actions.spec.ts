@@ -1,102 +1,150 @@
 import { actions } from '@/store/modules/product/actions'
 import { productService } from '@/services/product.service'
+import type { Product } from '@/types'
 
 jest.mock('@/services/product.service')
 
 const mockedService = productService as jest.Mocked<typeof productService>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ActionHandler = (ctx: any, payload?: any) => any
+const makeProduct = (id: number, category = 'phones'): Product =>
+  ({ id, title: `Product ${id}`, price: 100, category } as unknown as Product)
 
-const createContext = (stateOverrides = {}) => {
-  const state = {
-    products: [],
-    page: 1,
-    loading: false,
-    limit: 12,
-    hasMore: true,
-    activeCategory: null,
-    ...stateOverrides,
-  }
-
-  return {
-    state,
-    commit: jest.fn(),
-    dispatch: jest.fn(),
-    getters: {},
-    rootState: {},
-    rootGetters: {},
-  }
+type ProductActionCtx = {
+  products: Product[]
+  page: number
+  loading: boolean
+  limit: number
+  hasMore: boolean
+  activeCategory: string | null
+  sortBy: string | null
+  sortOrder: 'asc' | 'desc' | null
+  fetchProducts: jest.Mock<Promise<void>, []>
 }
+
+const createContext = (overrides: Partial<ProductActionCtx> = {}): ProductActionCtx => ({
+  products: [],
+  page: 1,
+  loading: false,
+  limit: 12,
+  hasMore: true,
+  activeCategory: null,
+  sortBy: null,
+  sortOrder: null,
+  fetchProducts: jest.fn().mockResolvedValue(undefined),
+  ...overrides,
+})
 
 describe('product/actions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(console, 'log').mockImplementation()
-    jest.spyOn(console, 'error').mockImplementation()
+    jest.spyOn(console, 'error').mockImplementation(() => undefined)
   })
 
   afterEach(() => {
     jest.restoreAllMocks()
   })
 
-  it('fetchProducts commits products on success', async () => {
-    const ctx = createContext()
-    mockedService.getProducts.mockResolvedValue({ products: [{ id: 1 }] })
+  it('fetchProducts appends unique products and clears activeCategory', async () => {
+    const ctx = createContext({ products: [makeProduct(1)] })
+    mockedService.getProducts.mockResolvedValue({
+      products: [makeProduct(1), makeProduct(2)],
+    })
 
-    await (actions.fetchProducts as ActionHandler)(ctx)
+    await actions.fetchProducts.call(ctx)
 
-    expect(ctx.commit).toHaveBeenCalledWith('setLoading', true)
-    expect(ctx.commit).toHaveBeenCalledWith('addProducts', [{ id: 1 }])
-    expect(ctx.commit).toHaveBeenCalledWith('setLoading', false)
+    expect(mockedService.getProducts).toHaveBeenCalledWith(12, 0, undefined, undefined)
+    expect(ctx.products.map((item) => item.id)).toEqual([1, 2])
+    expect(ctx.activeCategory).toBeNull()
+    expect(ctx.loading).toBe(false)
   })
 
   it('fetchProducts is guarded by loading and hasMore', async () => {
-    const ctx = createContext({ loading: true })
+    const loadingCtx = createContext({ loading: true })
+    await actions.fetchProducts.call(loadingCtx)
 
-    await (actions.fetchProducts as ActionHandler)(ctx)
+    const noMoreCtx = createContext({ hasMore: false })
+    await actions.fetchProducts.call(noMoreCtx)
 
-    expect(ctx.commit).not.toHaveBeenCalled()
+    expect(mockedService.getProducts).not.toHaveBeenCalled()
   })
 
-  it('loadMore increments page and dispatches fetchProducts', async () => {
+  it('loadMore increments page and calls fetchProducts when no active category', async () => {
     const ctx = createContext()
 
-    await (actions.loadMore as ActionHandler)(ctx)
+    await actions.loadMore.call(ctx)
 
-    expect(ctx.commit).toHaveBeenCalledWith('incrementPage')
-    expect(ctx.dispatch).toHaveBeenCalledWith('fetchProducts')
+    expect(ctx.page).toBe(2)
+    expect(ctx.fetchProducts).toHaveBeenCalled()
   })
 
-  it('fetchByCategory fetches and commits category products', async () => {
-    const ctx = createContext()
-    mockedService.getProductsByCategory.mockResolvedValue({ products: [{ id: 1 }] })
+  it('loadMore does not fetch when a category filter is active', async () => {
+    const ctx = createContext({ activeCategory: 'laptops' })
 
-    await (actions.fetchByCategory as ActionHandler)(ctx, 'phones')
+    await actions.loadMore.call(ctx)
 
-    expect(ctx.commit).toHaveBeenCalledWith('setActiveCategory', 'phones')
-    expect(ctx.commit).toHaveBeenCalledWith('setProducts', [{ id: 1 }])
-    expect(ctx.commit).toHaveBeenCalledWith('setLoading', false)
+    expect(ctx.page).toBe(1)
+    expect(ctx.fetchProducts).not.toHaveBeenCalled()
+  })
+
+  it('fetchByCategory sets category products and turns off infinite loading', async () => {
+    const ctx = createContext({
+      products: [makeProduct(99)],
+      page: 3,
+      sortBy: 'title',
+      sortOrder: 'asc',
+    })
+
+    mockedService.getProductsByCategory.mockResolvedValue({
+      products: [makeProduct(1, 'laptops')],
+    })
+
+    await actions.fetchByCategory.call(ctx, 'laptops')
+
+    expect(mockedService.getProductsByCategory).toHaveBeenCalledWith('laptops')
+    expect(ctx.activeCategory).toBe('laptops')
+    expect(ctx.products.map((item) => item.id)).toEqual([1])
+    expect(ctx.page).toBe(1)
+    expect(ctx.hasMore).toBe(false)
+    expect(ctx.sortBy).toBeNull()
+    expect(ctx.sortOrder).toBeNull()
+    expect(ctx.loading).toBe(false)
   })
 
   it('fetchByCategory sets empty products on error', async () => {
-    const ctx = createContext()
+    const ctx = createContext({ products: [makeProduct(1)] })
     mockedService.getProductsByCategory.mockRejectedValue(new Error('fail'))
 
-    await (actions.fetchByCategory as ActionHandler)(ctx, 'phones')
+    await actions.fetchByCategory.call(ctx, 'phones')
 
-    expect(ctx.commit).toHaveBeenCalledWith('setProducts', [])
-    expect(ctx.commit).toHaveBeenCalledWith('setLoading', false)
+    expect(ctx.products).toEqual([])
+    expect(ctx.hasMore).toBe(false)
+    expect(ctx.loading).toBe(false)
   })
 
   it('prepareDefaultListing resets only when a category is active', () => {
-    const active = createContext({ activeCategory: 'laptops' })
-    const inactive = createContext()
+    const active = createContext({
+      products: [makeProduct(1)],
+      page: 5,
+      hasMore: false,
+      activeCategory: 'laptops',
+    })
+    const inactive = createContext({
+      products: [makeProduct(2)],
+      page: 4,
+      hasMore: false,
+      activeCategory: null,
+    })
 
-    ;(actions.prepareDefaultListing as ActionHandler)(active)
-    ;(actions.prepareDefaultListing as ActionHandler)(inactive)
+    actions.prepareDefaultListing.call(active)
+    actions.prepareDefaultListing.call(inactive)
 
-    expect(active.commit).toHaveBeenCalledWith('resetListingState')
-    expect(inactive.commit).not.toHaveBeenCalled()
+    expect(active.products).toEqual([])
+    expect(active.page).toBe(1)
+    expect(active.hasMore).toBe(true)
+    expect(active.activeCategory).toBeNull()
+
+    expect(inactive.products.map((item) => item.id)).toEqual([2])
+    expect(inactive.page).toBe(4)
+    expect(inactive.hasMore).toBe(false)
   })
 })

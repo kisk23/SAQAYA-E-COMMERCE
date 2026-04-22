@@ -1,69 +1,67 @@
-import { mutations } from '@/store/modules/product/mutations'
-import { ProductState } from '@/store/modules/product/state'
-import { Product } from '@/types'
+import { actions } from '@/store/modules/product/actions'
+import type { Product } from '@/types'
 
-const createState = (overrides: Partial<ProductState> = {}): ProductState => ({
+const makeProduct = (id: number, category = 'phones'): Product =>
+  ({ id, title: `Product ${id}`, price: 100, category } as unknown as Product)
+
+type ProductActionCtx = {
+  products: Product[]
+  page: number
+  loading: boolean
+  limit: number
+  hasMore: boolean
+  activeCategory: string | null
+  sortBy: string | null
+  sortOrder: 'asc' | 'desc' | null
+  fetchProducts: jest.Mock<Promise<void>, []>
+}
+
+const createContext = (overrides: Partial<ProductActionCtx> = {}): ProductActionCtx => ({
   products: [],
   page: 1,
   loading: false,
   limit: 12,
   hasMore: true,
   activeCategory: null,
+  sortBy: null,
+  sortOrder: null,
+  fetchProducts: jest.fn().mockResolvedValue(undefined),
   ...overrides,
 })
 
-const makeProduct = (id: number, category = 'phones'): Product =>
-  ({ id, title: `Product ${id}`, price: 100, category }) as unknown as Product
-
-describe('product/mutations', () => {
-  it('setProducts replaces the products array', () => {
-    const state = createState({ products: [makeProduct(99)] })
-
-    mutations.setProducts(state, [makeProduct(1)])
-
-    expect(state.products).toEqual([makeProduct(1)])
-  })
-
-  it('addProducts appends new items and skips duplicates', () => {
-    const state = createState({ products: [makeProduct(1)] })
-
-    mutations.addProducts(state, [makeProduct(1), makeProduct(2)])
-
-    expect(state.products.map((p) => p.id)).toEqual([1, 2])
-  })
-
-  it('incrementPage increments by one', () => {
-    const state = createState({ page: 3 })
-
-    mutations.incrementPage(state)
-
-    expect(state.page).toBe(4)
-  })
-
-  it('setActiveCategory updates the category', () => {
-    const state = createState()
-
-    mutations.setActiveCategory(state, 'laptops')
-
-    expect(state.activeCategory).toBe('laptops')
-  })
-
-  it('resetListingState clears products/page/hasMore only', () => {
-    const state = createState({
+describe('product/state updates via actions', () => {
+  it('fetchSortedProducts resets listing state and delegates to fetchProducts', async () => {
+    const ctx = createContext({
       products: [makeProduct(1)],
-      page: 5,
+      page: 4,
       hasMore: false,
-      loading: true,
-      activeCategory: 'laptops',
+      activeCategory: 'phones',
     })
 
-    mutations.resetListingState(state)
+    await actions.fetchSortedProducts.call(ctx, 'title', 'asc')
 
-    expect(state.products).toEqual([])
-    expect(state.page).toBe(1)
-    expect(state.hasMore).toBe(true)
-    // untouched
-    expect(state.loading).toBe(true)
-    expect(state.activeCategory).toBe('laptops')
+    expect(ctx.sortBy).toBe('title')
+    expect(ctx.sortOrder).toBe('asc')
+    expect(ctx.products).toEqual([])
+    expect(ctx.page).toBe(1)
+    expect(ctx.hasMore).toBe(true)
+    expect(ctx.activeCategory).toBeNull()
+    expect(ctx.fetchProducts).toHaveBeenCalled()
+  })
+
+  it('fetchSortedProducts returns early when already loading', async () => {
+    const ctx = createContext({
+      loading: true,
+      products: [makeProduct(1)],
+      page: 3,
+    })
+
+    await actions.fetchSortedProducts.call(ctx, 'rating', 'desc')
+
+    expect(ctx.sortBy).toBeNull()
+    expect(ctx.sortOrder).toBeNull()
+    expect(ctx.products.map((item) => item.id)).toEqual([1])
+    expect(ctx.page).toBe(3)
+    expect(ctx.fetchProducts).not.toHaveBeenCalled()
   })
 })
