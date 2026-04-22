@@ -1,9 +1,9 @@
-import { Wrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
 import { setupShallowMount, createGetHelper } from '@tests/helpers'
 import ProductsHeader from '@/components/product/ProductHeader.vue'
 
-describe('ProductsHeader — Sort Dropdown', () => {
-  let wrapper: Wrapper<Vue>
+describe('ProductsHeader - Sort Dropdown', () => {
+  let wrapper: VueWrapper
   let get: ReturnType<typeof createGetHelper>
 
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('ProductsHeader — Sort Dropdown', () => {
   })
 
   afterEach(() => {
-    wrapper.destroy()
+    wrapper.unmount()
   })
 
   describe('initial state', () => {
@@ -128,7 +128,7 @@ describe('ProductsHeader — Sort Dropdown', () => {
   describe('cleanup', () => {
     it('removes the document click listener on destroy', () => {
       const removeSpy = jest.spyOn(document, 'removeEventListener')
-      wrapper.destroy()
+      wrapper.unmount()
       expect(removeSpy).toHaveBeenCalledWith('click', expect.any(Function))
       removeSpy.mockRestore()
     })

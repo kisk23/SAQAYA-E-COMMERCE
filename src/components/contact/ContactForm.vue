@@ -50,42 +50,37 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+import { reactive, ref } from 'vue'
 import { validateContactForm } from '@/services/validation.service'
-import type { ValidationErrors } from '@/types/validation'
+import type { ContactForm as ContactFormData, ValidationErrors } from '@/types/validation'
 
-export default Vue.extend({
-  name: 'ContactForm',
-  data() {
-    return {
-      form: {
-        name: '',
-        email: '',
-        message: '',
-      },
-      errors: {} as ValidationErrors,
-    }
-  },
-  methods: {
-    submitForm() {
-      const { isValid, errors } = validateContactForm(this.form)
-
-      this.errors = errors
-
-      if (!isValid) return
-
-      alert('Form submitted!')
-
-      this.form = {
-        name: '',
-        email: '',
-        message: '',
-      }
-      this.errors = {}
-    },
-  },
+const form = reactive<ContactFormData>({
+  name: '',
+  email: '',
+  message: '',
 })
+
+const errors = ref<ValidationErrors>({})
+
+const submitForm = () => {
+  const result = validateContactForm({
+    name: form.name,
+    email: form.email,
+    message: form.message,
+  })
+
+  errors.value = result.errors
+
+  if (!result.isValid) return
+
+  alert('Form submitted!')
+
+  form.name = ''
+  form.email = ''
+  form.message = ''
+  errors.value = {}
+}
 </script>
 
 <style lang="scss" scoped>

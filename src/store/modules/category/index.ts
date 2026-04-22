@@ -1,14 +1,12 @@
-import { Module } from 'vuex'
-import { RootState } from '@/types'
-import { CategoryState, state } from './state'
+import { defineStore } from 'pinia'
+import { createInitialState } from './state'
 import { actions } from './actions'
 import { getters } from './getters'
-import { mutations } from './mutations'
 
-export const category: Module<CategoryState, RootState> = {
-  namespaced: true,
-  state,
+export const useCategoryStore = defineStore('category', {
+  state: createInitialState,
   actions,
   getters,
-  mutations,
-}
+})
+
+export type { CategoryState } from './state'

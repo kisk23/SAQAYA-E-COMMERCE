@@ -1,15 +1,15 @@
 <template>
   <div class="product-card">
     <div class="product-card__image">
-      <div data-testid="discount-badge">
+      <div data-testid="discount-badge" class="product-card__discount">
         <slot name="discount-badge"></slot>
       </div>
 
       <img
         :src="product.thumbnail"
         :alt="`Product image: ${product.title}`"
-        @click="goToProduct"
         data-testid="product-image"
+        @click="goToProduct"
       />
 
       <div class="product-card__top-actions">
@@ -23,7 +23,7 @@
       </div>
 
       <div class="product-card__actions">
-        <button @click="addToCart" data-testid="add-to-cart">Add to Cart</button>
+        <button data-testid="add-to-cart" @click="addToCart">Add to Cart</button>
       </div>
     </div>
 
@@ -32,7 +32,7 @@
 
       <div class="product-card__prices">
         <span class="product-card__price" data-testid="product-price"
-          >${{ (product.price * (1 - product.discountPercentage / 100)).toFixed(2) }}</span
+          >${{ discountedPrice.toFixed(2) }}</span
         >
         <span class="product-card__old" data-testid="product-old-price"
           >${{ product.price.toFixed(2) }}</span
@@ -60,41 +60,42 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue, { PropType } from 'vue'
+<script setup lang="ts">
+import { computed, toRefs } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import type { Product } from '@/types'
-export default Vue.extend({
-  props: {
-    //this entire problem PropType<Product> disappears with defineProps vue3.
-    product: {
-      type: Object as PropType<Product>,
-      required: true,
-    },
-  },
-  computed: {
-    filledStars(): number {
-      return Math.floor(this.product.rating)
-    },
-  },
+import { useCartStore } from '@/store/modules/cart'
 
-  methods: {
-    addToCart() {
-      this.$store.commit('cart/addToCart', this.product)
-    },
-    goToProduct() {
-      const fromPath = this.$route.fullPath
-      const fromLabel = this.$route.name === 'products' ? 'Products' : 'Home'
+const props = defineProps<{
+  product: Product
+}>()
+const { product } = toRefs(props)
 
-      this.$router.push({
-        path: `/products/${this.product.id}`,
-        query: {
-          from: fromPath,
-          fromLabel,
-        },
-      })
+const cartStore = useCartStore()
+const route = useRoute()
+const router = useRouter()
+
+const filledStars = computed(() => Math.floor(product.value.rating))
+const discountedPrice = computed(
+  () => product.value.price * (1 - product.value.discountPercentage / 100)
+)
+
+const addToCart = () => {
+  cartStore.addToCart(product.value)
+}
+
+const goToProduct = () => {
+  const fromPath = route.fullPath
+  const fromLabel = route.name === 'products' ? 'Products' : 'Home'
+
+  router.push({
+    path: `/products/${product.value.id}`,
+    query: {
+      from: fromPath,
+      fromLabel,
     },
-  },
-})
+  })
+}
 </script>
 
 <style lang="scss" scoped>

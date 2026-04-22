@@ -1,6 +1,4 @@
-import { GetterTree } from 'vuex'
-import { RootState } from '@/types'
-import { CategoryState } from './state'
+import type { CategoryState } from './state'
 
 const categoryMap: Record<string, { label: string; icon: string }> = {
   beauty: {
@@ -25,10 +23,8 @@ const categoryMap: Record<string, { label: string; icon: string }> = {
   },
 }
 
-export const getters: GetterTree<CategoryState, RootState> = {
-  categories: (state) => state.categories,
-  selectedCategory: (state) => state.selectedCategory,
-  mappedCategories: (state) => {
+export const getters = {
+  mappedCategories: (state: CategoryState) => {
     return state.categories
       .filter((cat) => categoryMap[cat])
       .map((cat) => ({

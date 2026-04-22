@@ -14,41 +14,27 @@
   </section>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import TodayBadge from '@/components/shared/TodayBadge.vue'
 import ProductCard from '@/components/shared/ProductCard.vue'
-import { Product } from '@/types'
+import { useProductStore } from '@/store/modules/product'
 
-export default Vue.extend({
-  name: 'MoreofCategory',
+const props = defineProps<{
+  category: string
+}>()
 
-  components: {
-    TodayBadge,
-    ProductCard,
-  },
+const productStore = useProductStore()
 
-  props: {
-    category: {
-      type: String,
-      required: true,
-    },
-  },
+const categoryName = computed(() => props.category)
 
-  computed: {
-    categoryName(): string {
-      return this.category
-    },
+const products = computed(() => {
+  const result = productStore.getByCategory(props.category)
+  return result.slice(0, 4)
+})
 
-    products(): Product[] {
-      const products = this.$store.getters['product/getByCategory'](this.category)
-      return products.slice(0, 4)
-    },
-  },
-
-  created() {
-    this.$store.dispatch('product/fetchByCategory', this.category)
-  },
+onMounted(() => {
+  productStore.fetchByCategory(props.category)
 })
 </script>
 

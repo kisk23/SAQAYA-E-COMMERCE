@@ -3,7 +3,7 @@ import ContactForm from '@/components/contact/ContactForm.vue'
 import { validateContactForm } from '@/services/validation.service'
 import type { ValidationErrors } from '@/types/validation'
 
-type ContactFormVm = Vue & {
+type ContactFormVm = {
   form: {
     name: string
     email: string
@@ -90,7 +90,7 @@ describe('ContactForm.vue', () => {
 
     expect(window.alert).toHaveBeenCalledWith('Form submitted!')
 
-    const vm = wrapper.vm as ContactFormVm
+    const vm = wrapper.vm as unknown as ContactFormVm
 
     expect(vm.form).toEqual({
       name: '',
@@ -106,7 +106,7 @@ describe('ContactForm.vue', () => {
 
     await get('name-input').setValue('Alice')
 
-    expect((wrapper.vm as ContactFormVm).form.name).toBe('Alice')
+    expect((wrapper.vm as unknown as ContactFormVm).form.name).toBe('Alice')
   })
 
   it('hides all error spans when errors are cleared', async () => {

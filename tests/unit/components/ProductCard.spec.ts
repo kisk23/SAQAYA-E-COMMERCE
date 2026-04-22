@@ -1,17 +1,49 @@
-import { setupMount } from '@tests/helpers'
-import { mockProduct } from '@tests/helpers'
+import { createTestingPinia } from '@pinia/testing'
 import ProductCard from '@/components/shared/ProductCard.vue'
+import { useCartStore } from '@/store/modules/cart'
+import { mockProduct } from '@tests/helpers'
+import { setupMount } from '@tests/helpers'
+import { useRoute, useRouter } from 'vue-router'
+
+jest.mock('vue-router', () => ({
+  useRoute: jest.fn(),
+  useRouter: jest.fn(),
+}))
 
 describe('ProductCard.vue', () => {
-  const factory = (overrides = {}, mocks = {}) =>
-    setupMount(
+  let pushMock: jest.Mock
+
+  const factory = (overrides = {}, options: Record<string, any> = {}) => {
+    const pinia =
+      options.pinia ??
+      createTestingPinia({
+        createSpy: jest.fn,
+        stubActions: true,
+      })
+
+    const setup = setupMount(
       ProductCard,
       {
-        propsData: { product: { ...mockProduct, ...overrides } },
-        mocks,
+        ...options,
+        pinia,
+        props: { product: { ...mockProduct, ...overrides } },
       },
       'data-testid'
     )
+
+    const cartStore = useCartStore(pinia)
+    return { ...setup, cartStore }
+  }
+
+  beforeEach(() => {
+    pushMock = jest.fn()
+    ;(useRouter as unknown as jest.Mock).mockReturnValue({ push: pushMock })
+    ;(useRoute as unknown as jest.Mock).mockReturnValue({ fullPath: '/', name: 'home' })
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
 
   it('renders product title and prices correctly', () => {
     const { get } = factory()
@@ -21,34 +53,25 @@ describe('ProductCard.vue', () => {
     const discounted = (100 * (1 - 20 / 100)).toFixed(2)
 
     expect(get('product-price').text()).toContain(discounted)
-
     expect(get('product-old-price').text()).toContain('100.00')
   })
 
-  it('calls $store.commit when Add to Cart is clicked', async () => {
-    const commit = jest.fn()
-    const { get } = factory({}, { $store: { commit } })
+  it('calls cart store action when Add to Cart is clicked', async () => {
+    const { get, cartStore } = factory()
 
     await get('add-to-cart').trigger('click')
 
-    expect(commit).toHaveBeenCalledTimes(1)
-    expect(commit).toHaveBeenCalledWith('cart/addToCart', mockProduct)
+    expect(cartStore.addToCart).toHaveBeenCalledTimes(1)
+    expect(cartStore.addToCart).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }))
   })
 
-  it('calls $router.push when image is clicked', async () => {
-    const push = jest.fn()
-    const { get } = factory(
-      {},
-      {
-        $router: { push },
-        $route: { fullPath: '/' },
-      }
-    )
+  it('calls router.push when image is clicked', async () => {
+    const { get } = factory()
 
     await get('product-image').trigger('click')
 
-    expect(push).toHaveBeenCalledTimes(1)
-    expect(push).toHaveBeenCalledWith({
+    expect(pushMock).toHaveBeenCalledTimes(1)
+    expect(pushMock).toHaveBeenCalledWith({
       path: '/products/1',
       query: {
         from: '/',
@@ -57,8 +80,8 @@ describe('ProductCard.vue', () => {
     })
   })
 
-  it('renders no filled stars when there are no reviews', () => {
-    const { wrapper } = factory({ reviews: [] })
+  it('renders no filled stars when rating is 0', () => {
+    const { wrapper } = factory({ rating: 0, reviews: [] })
 
     const stars = wrapper.findAll('[data-testid="star"]')
     const filledStars = stars.filter((star) => star.attributes('data-filled') === 'true')
@@ -79,7 +102,7 @@ describe('ProductCard.vue', () => {
     const { get } = setupMount(
       ProductCard,
       {
-        propsData: { product: mockProduct },
+        props: { product: mockProduct },
         slots: {
           'discount-badge': '<span>-20%</span>',
         },
@@ -101,12 +124,10 @@ describe('ProductCard.vue', () => {
     expect(badge.text()).toBe('')
   })
 
-  it('does not call $store.commit on mount', () => {
-    const commit = jest.fn()
+  it('does not call cart action on mount', () => {
+    const { cartStore } = factory()
 
-    factory({}, { $store: { commit } })
-
-    expect(commit).not.toHaveBeenCalled()
+    expect(cartStore.addToCart).not.toHaveBeenCalled()
   })
 
   it('renders without crashing when thumbnail is missing', () => {

@@ -37,18 +37,18 @@
       <div class="product-info__quantity">
         <button
           class="product-info__quantity-btn"
-          @click="decrement"
           :disabled="qty <= 1"
           aria-label="Decrease quantity"
+          @click="decrement"
         >
           −
         </button>
         <span class="product-info__quantity-value">{{ qty }}</span>
         <button
           class="product-info__quantity-btn product-info__quantity-btn--colred"
-          @click="increment"
           :disabled="qty >= product.stock"
           aria-label="Increase quantity"
+          @click="increment"
         >
           +
         </button>
@@ -59,8 +59,8 @@
       <button
         class="product-info__wishlist-btn"
         :class="{ 'product-info__wishlist-btn--active': wishlisted }"
-        @click="wishlisted = !wishlisted"
         aria-label="Add to wishlist"
+        @click="wishlisted = !wishlisted"
       >
         <img src="@/assets/icons/wishlist.svg" alt="Wishlist" />
       </button>
@@ -92,38 +92,37 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import type { Product } from '@/types'
 
-export default Vue.extend({
-  name: 'ProductInfo',
+const props = defineProps<{
+  product: Product
+}>()
 
-  props: {
-    product: { type: Object as () => Product, required: true },
-  },
+defineEmits<{
+  (e: 'buy-now', payload: { product: Product; qty: number }): void
+}>()
 
-  data() {
-    return { qty: 1, wishlisted: false }
-  },
+const qty = ref(1)
+const wishlisted = ref(false)
 
-  methods: {
-    getStarClass(star: number) {
-      const r = this.product.rating
-      return {
-        'product-info__star--full': star <= Math.floor(r),
-        'product-info__star--half': star === Math.ceil(r) && r % 1 >= 0.4,
-        'product-info__star--empty': star > Math.ceil(r),
-      }
-    },
-    increment() {
-      if (this.qty < this.product.stock) this.qty++
-    },
-    decrement() {
-      if (this.qty > 1) this.qty--
-    },
-  },
-})
+const getStarClass = (star: number) => {
+  const r = props.product.rating
+  return {
+    'product-info__star--full': star <= Math.floor(r),
+    'product-info__star--half': star === Math.ceil(r) && r % 1 >= 0.4,
+    'product-info__star--empty': star > Math.ceil(r),
+  }
+}
+
+const increment = () => {
+  if (qty.value < props.product.stock) qty.value++
+}
+
+const decrement = () => {
+  if (qty.value > 1) qty.value--
+}
 </script>
 
 <style lang="scss" scoped>

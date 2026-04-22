@@ -4,25 +4,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
 import ProductCard from '@/components/shared/ProductCard.vue'
 import type { Product } from '@/types'
 
-export default Vue.extend({
-  name: 'ProductsList',
-
-  props: {
-    products: {
-      type: Array as () => Product[],
-      required: true,
-    },
-  },
-
-  components: {
-    ProductCard,
-  },
-})
+defineProps<{
+  products: Product[]
+}>()
 </script>
 
 <style lang="scss" scoped>

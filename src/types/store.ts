@@ -1,9 +1,12 @@
-import type { CartItem } from './cart'
 import type { Product } from './product'
 
-export interface RootState {
+export interface ProductState {
   products: Product[]
-  cart: CartItem[]
-  categories: string[]
-  loadingProducts: boolean
+  page: number
+  loading: boolean
+  limit: number
+  hasMore: boolean
+  activeCategory: string | null
+  sortBy: string | null
+  sortOrder: 'asc' | 'desc' | null
 }

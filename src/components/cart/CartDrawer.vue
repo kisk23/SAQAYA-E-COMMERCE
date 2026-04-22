@@ -3,20 +3,20 @@
     <div
       class="cart-drawer__backdrop"
       :class="{ 'cart-drawer__backdrop--active': isOpen }"
-      @click="$emit('close')"
       data-test="backdrop"
+      @click="emit('close')"
     />
 
     <aside
       class="cart-drawer"
       :class="{ 'cart-drawer--active': isOpen }"
       aria-label="Shopping cart"
-      @click.stop
       data-test="drawer"
+      @click.stop
     >
       <div class="cart-drawer__header">
         <h3 class="cart-drawer__title">Shopping Cart</h3>
-        <button class="cart-drawer__close" @click="$emit('close')" data-test="close">✕</button>
+        <button class="cart-drawer__close" data-test="close" @click="emit('close')">✕</button>
       </div>
 
       <div v-if="cartItems.length === 0" class="cart-drawer__empty" data-test="empty">
@@ -26,9 +26,9 @@
       <div v-else class="cart-drawer__body">
         <div class="cart-drawer__items">
           <div
-            class="cart-drawer__item"
             v-for="item in cartItems"
             :key="item.id"
+            class="cart-drawer__item"
             data-test="cart-item"
           >
             <img v-if="item.image" :src="item.image" :alt="item.title" class="cart-drawer__image" />
@@ -38,12 +38,12 @@
               <p class="cart-drawer__name">{{ item.title }}</p>
 
               <div class="cart-drawer__controls">
-                <button @click="decrease(item.id)" data-test="decrease">−</button>
+                <button data-test="decrease" @click="decrease(item.id)">−</button>
                 <span data-test="quantity">{{ item.quantity }}</span>
-                <button @click="increase(item.id)" data-test="increase">+</button>
+                <button data-test="increase" @click="increase(item.id)">+</button>
               </div>
 
-              <button class="cart-drawer__remove" @click="remove(item.id)" data-test="remove">
+              <button class="cart-drawer__remove" data-test="remove" @click="remove(item.id)">
                 Remove
               </button>
             </div>
@@ -75,43 +75,39 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import type { NormalizedCartItem } from '@/types/cart'
+<script setup lang="ts">
+import { computed } from 'vue'
+
 import { formatPrice } from '@/utils/format'
-export default Vue.extend({
-  name: 'CartDrawer',
-  props: {
-    isOpen: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-  },
-  computed: {
-    cartItems(): NormalizedCartItem[] {
-      return this.$store.getters['cart/cartItems'] as NormalizedCartItem[]
-    },
-    totalItems(): number {
-      return this.$store.getters['cart/totalItems']
-    },
-    cartTotal() {
-      return this.$store.getters['cart/cartTotal']
-    },
-  },
-  methods: {
-    increase(productId: number): void {
-      this.$store.commit('cart/incrementCartItem', productId)
-    },
-    decrease(productId: number): void {
-      this.$store.commit('cart/decreaseCartItem', productId)
-    },
-    remove(productId: number): void {
-      this.$store.commit('cart/removeFromCart', productId)
-    },
-    formatPrice,
-  },
+import { useCartStore } from '@/store/modules/cart'
+const cartStore = useCartStore()
+
+defineProps<{
+  isOpen: boolean
+}>()
+const emit = defineEmits<{
+  (event: 'close'): void
+}>()
+
+const cartItems = computed(() => {
+  return cartStore.cartItems
 })
+
+const cartTotal = computed(() => {
+  return cartStore.cartTotal
+})
+
+const increase = (productId: number): void => {
+  cartStore.incrementCartItem(productId)
+}
+
+const decrease = (productId: number): void => {
+  cartStore.decreaseCartItem(productId)
+}
+
+const remove = (productId: number): void => {
+  cartStore.removeFromCart(productId)
+}
 </script>
 
 <style lang="scss" scoped>

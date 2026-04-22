@@ -27,88 +27,80 @@
   </section>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
 import Swiper from 'swiper'
 import { Autoplay, Pagination } from 'swiper/modules'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import HeroFrame from '@/assets/images/HeroFrame.svg'
 
-export default Vue.extend({
-  name: 'HeroSection',
+interface HeroSlide {
+  title: string
+  text: string
+  logo: string
+  image: string
+}
 
-  data(): { swiperInstance: Swiper | null } {
-    return {
-      swiperInstance: null,
-    }
+const heroSwiper = ref<HTMLElement | null>(null)
+const swiperInstance = ref<Swiper | null>(null)
+
+const slides: HeroSlide[] = [
+  {
+    title: 'iPhone 14 Series',
+    text: 'Up to 10% off Voucher',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+    image: HeroFrame,
   },
+  {
+    title: 'iPhone 14 Series',
+    text: 'Up to 10% off Voucher',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+    image: 'https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=800&q=80',
+  },
+  {
+    title: 'Samsung Deals',
+    text: 'Limited Time Offer',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg',
+    image: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=800&q=80',
+  },
+  {
+    title: 'OnePlus 6T',
+    text: 'Speed Reimagined',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+    image: 'https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=800&q=80',
+  },
+]
 
-  computed: {
-    slides() {
-      return [
-        {
-          title: 'iPhone 14 Series',
-          text: 'Up to 10% off Voucher',
-          logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-          image: HeroFrame,
-        },
-        {
-          title: 'iPhone 14 Series',
-          text: 'Up to 10% off Voucher',
-          logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-          image: 'https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=800&q=80',
-        },
-        {
-          title: 'Samsung Deals',
-          text: 'Limited Time Offer',
-          logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg',
-          image: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=800&q=80',
-        },
-        {
-          title: 'OnePlus 6T',
-          text: 'Speed Reimagined',
-          logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-          image: 'https://images.unsplash.com/photo-1616348436168-de43ad0db179?w=800&q=80',
-        },
-      ]
+const initSwiper = (): void => {
+  const el = heroSwiper.value
+  if (!el) return
+
+  swiperInstance.value = new Swiper(el, {
+    modules: [Autoplay, Pagination],
+    slidesPerView: 1,
+    loop: true,
+    speed: 800,
+    autoplay: {
+      delay: 3500,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
     },
-  },
-
-  mounted() {
-    this.$nextTick(() => {
-      this.initSwiper()
-    })
-  },
-
-  beforeDestroy() {
-    this.swiperInstance?.destroy(true, true)
-  },
-
-  methods: {
-    initSwiper(): void {
-      const el = this.$refs.heroSwiper as HTMLElement | undefined
-      if (!el) return
-
-      this.swiperInstance = new Swiper(el, {
-        modules: [Autoplay, Pagination],
-        slidesPerView: 1,
-        loop: true,
-        speed: 800,
-
-        autoplay: {
-          delay: 3500,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        },
-
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-      })
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
     },
-  },
+  })
+}
+
+onMounted(async () => {
+  await nextTick()
+  initSwiper()
+})
+
+onBeforeUnmount(() => {
+  swiperInstance.value?.destroy(true, true)
+  swiperInstance.value = null
 })
 </script>
 

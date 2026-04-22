@@ -1,20 +1,28 @@
-# Vue 2 E-Commerce App
+# E-Commerce Frontend (Vue 3 + TypeScript)
 
-A Vue 2 + TypeScript storefront application with product listing, product details, sorting, cart drawer, category browsing, and static informational pages.
+Single-page storefront built with Vue 3, Composition API, Pinia, and Vue Router 4.
 
-Deployed app:
-`https://saqaya-e-commerce-m1qj04gc8-anwars-projects-727fb88d.vercel.app/`
+## Architecture Overview
+
+The app is organized by layers:
+
+- `views`: page-level route targets.
+- `components`: reusable UI grouped by domain (`home`, `product`, `cart`, `contact`, `about`, `shared`).
+- `store/modules`: Pinia stores split by business domain (`product`, `category`, `cart`).
+- `services`: API integration and domain-specific async calls.
+- `router`: route definitions and guards.
+- `types`: shared TypeScript contracts.
+- `assets/styles`: global SCSS architecture (7-1 style structure).
 
 ## Tech Stack
 
-- Vue 2 (`vue`, `vue-template-compiler`)
-- Vue Router 3
-- Vuex 3
-- TypeScript
+- Vue `3.5.x` with Composition API
+- Vue Router `4.x`
+- Pinia `3.x`
+- TypeScript `4.9.x`
 - Axios
-- Sass (`sass` + `sass-loader`)
-- Jest + Vue Test Utils
-- Swiper (home sliders)
+- SCSS (`sass`, `sass-loader`)
+- Jest + Vue Test Utils (Vue 3)
 - ESLint + Prettier
 
 ## Project Structure
@@ -27,58 +35,18 @@ app/
 |   |   |-- icons/
 |   |   |-- images/
 |   |   `-- styles/
-|   |       |-- abstracts/
-|   |       |   |-- _variables.scss
-|   |       |   |-- _mixins.scss
-|   |       |   |-- _functions.scss
-|   |       |   `-- _placeholders.scss
-|   |       |-- base/
-|   |       |   |-- _typography.scss
-|   |       |   `-- _base.scss
-|   |       |-- components/
-|   |       |   |-- _buttons.scss
-|   |       |   |-- _cards.scss
-|   |       |   |-- _forms.scss
-|   |       |   |-- _modals.scss
-|   |       |   `-- _tables.scss
-|   |       |-- layout/
-|   |       |   |-- _header.scss
-|   |       |   |-- _footer.scss
-|   |       |   |-- _navigation.scss
-|   |       |   |-- _sidebar.scss
-|   |       |   `-- _grid.scss
-|   |       |-- pages/
-|   |       |   |-- _home.scss
-|   |       |   |-- _products.scss
-|   |       |   |-- _cart.scss
-|   |       |   `-- _auth.scss
-|   |       |-- themes/
-|   |       |   `-- _default.scss
-|   |       |-- vendors/
-|   |       |   |-- _bootstrap.scss
-|   |       |   `-- _vuetify-overrides.scss
-|   |       `-- main.scss
 |   |-- components/
 |   |   |-- about/
 |   |   |-- cart/
-|   |   |   `-- CartDrawer.vue
 |   |   |-- contact/
 |   |   |-- home/
 |   |   |-- product/
-|   |   |   |-- ProductHeader.vue
-|   |   |   |-- ProductList.vue
-|   |   |   `-- LoadMore.vue
 |   |   |-- product-detail/
 |   |   `-- shared/
-|   |       |-- BreadCrumbs.vue
-|   |       `-- ProductCard.vue
 |   |-- layouts/
-|   |   |-- MainLayout.vue
-|   |   |-- HeaderSection.vue
-|   |   `-- FooterSection.vue
 |   |-- router/
-|   |   |-- index.ts
-|   |   `-- guards.ts
+|   |   |-- guards.ts
+|   |   `-- index.ts
 |   |-- services/
 |   |   |-- http.ts
 |   |   |-- product.service.ts
@@ -101,73 +69,68 @@ app/
 |   |       |-- list/ProductsView.vue
 |   |       `-- detail/ProductView.vue
 |   |-- App.vue
-|   `-- main.ts
+|   |-- main.ts
+|   `-- shims-vue.d.ts
 |-- tests/
 |   `-- unit/
-|       |-- App.spec.ts
-|       `-- components/
-|           |-- ProductCard.spec.ts
-|           |-- SortDropdown.spec.ts
-|           `-- CartDrawer.spec.ts
+|       |-- components/
+|       |-- helpers/
+|       `-- store/
 |-- .env
+|-- jest.config.js
 |-- package.json
+|-- tsconfig.json
 `-- README.md
 ```
 
-## Routing Overview
+## Routing
 
-Configured in `src/router/index.ts`:
+Defined in `src/router/index.ts`:
 
-- `/` -> Home
-- `/products` -> Products list
-- `/products/:id` -> Product details (dynamic route)
-- `/about` -> About
-- `/contact` -> Contact
-- `*` -> Not found
+- `/` -> `HomeView`
+- `/products` -> `ProductsView`
+- `/products/:id` -> `ProductView`
+- `/about` -> `AboutView`
+- `/contact` -> `ContactView`
+- fallback -> `NotFoundView`
 
-Route guards live in `src/router/guards.ts`:
+Route guards in `src/router/guards.ts`:
 
-- `ensureProductsLoaded`: preloads products when needed
-- `validateProductId`: validates dynamic product id before entering details page
+- `ensureProductsLoaded`: preloads products before relevant pages.
+- `validateProductId`: validates `:id` and redirects invalid values to not found.
 
-## State Management (Vuex)
+## State Management (Pinia)
 
-Store entry: `src/store/index.ts`
+Stores are under `src/store/modules`:
 
-Modules:
+- `product`: listing data, pagination, category filter, API sorting (`sortBy`, `sortOrder`), product lookup helpers.
+- `category`: category fetch + selected category state.
+- `cart`: add/remove/increment/decrement cart items and localStorage persistence.
 
-- `product`: product list, pagination, loading, `hasMore`
-- `category`: category list + loading state
-- `cart`: cart items, quantity updates, totals, localStorage persistence
+Pinia root instance is created in `src/store/index.ts` and registered in `src/main.ts`.
 
-## Styling Architecture
+## API Layer
 
-- Global stylesheet entry is `src/assets/styles/main.scss` and is imported in `src/main.ts`.
-- Styles follow a 7-1 Sass layout under `src/assets/styles/` (`abstracts`, `base`, `components`, `layout`, `pages`, `themes`, `vendors`).
-- Runtime CSS custom properties are exposed in `src/assets/styles/themes/_default.scss` for components that consume `var(--...)`.
-- Component, view, and layout style blocks use `<style lang="scss" scoped>`.
+Configured in `src/services/http.ts` using `VUE_APP_API_BASE_URL`.
 
-## Data Layer
+Main service calls:
 
-Services are in `src/services/`:
+- `productService.getProducts(limit, skip, sortBy, order)`
+- `productService.getProductsByCategory(category)`
+- `productService.getProductById(id)`
+- `categoryService.getCategories()`
 
-- `http.ts`: Axios instance (`VUE_APP_API_BASE_URL`)
-- `product.service.ts`: fetch product list + fetch product by id
-- `category.service.ts`: fetch categories
-- `validation.service.ts`: contact form validation
+## Styling
 
-## Key Feature Notes
-
-- Product sorting (price/rating) is handled in `ProductsView.vue`.
-- Product detail uses route param (`$route.params.id`) to load the product.
-- Breadcrumbs use route query context (`from`, `fromLabel`, etc.) when navigating between list/detail.
-- Cart drawer UI is in `src/components/cart/CartDrawer.vue`; cart state is in Vuex `cart` module.
+- Global entry: `src/assets/styles/main.scss`
+- SCSS organization: `abstracts`, `base`, `components`, `layout`, `pages`, `themes`, `vendors`
+- Component styles use scoped SCSS where appropriate.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18.12+ recommended
+- Node.js 18+
 - npm
 
 ### Install
@@ -178,40 +141,59 @@ npm install
 
 ### Environment
 
-`.env` currently uses:
+Create or update `.env`:
 
 ```env
 VUE_APP_API_BASE_URL=https://dummyjson.com
 ```
 
-## Available Scripts
+### Run Development Server
 
 ```bash
-npm run serve         # start dev server (hot reload)
+npm run serve
+```
+
+## Scripts
+
+```bash
+npm run serve         # start local dev server
 npm run build         # production build
-npm run lint          # lint project
+npm run lint          # lint codebase
 npm run test:unit     # run unit tests
-npm run coverage      # run tests with coverage
-npm run format        # apply prettier formatting
+npm run coverage      # run unit tests with coverage
+npm run format        # format code
 npm run format:check  # check formatting
 ```
 
 ## Testing
 
-Unit tests are under `tests/unit`.
+Unit tests live in `tests/unit`:
 
-Current component test files:
+- `components`: component behavior tests
+- `store`: Pinia store actions/getters/state tests
+- `helpers`: shared mount/setup utilities for Vue 3 tests
 
-- `ProductCard.spec.ts`
-- `SortDropdown.spec.ts`
-- `CartDrawer.spec.ts`
-
-Run:
+Run all tests:
 
 ```bash
 npm run test:unit
 ```
 
-## Configuration Reference
+Run only store tests:
 
-- Vue CLI docs: `https://cli.vuejs.org/config/`
+```bash
+npm run test:unit -- --runInBand tests/unit/store
+```
+
+Run only component tests:
+
+```bash
+npm run test:unit -- --runInBand tests/unit/components
+```
+
+## Migration Status
+
+- Migrated from Vue 2 Options API to Vue 3 Composition API.
+- Migrated from Vuex to Pinia modules.
+- Updated router to Vue Router 4.
+- Updated component and store unit tests for Vue 3 + Pinia behavior.

@@ -2,9 +2,9 @@
   <nav class="breadcrumbs">
     <span v-for="(item, index) in items" :key="index" class="breadcrumbs__item">
       <span v-if="index !== items.length - 1">
-        <a :href="item.link" class="breadcrumbs__link">
+        <router-link :to="item.link" class="breadcrumbs__link">
           {{ item.label }}
-        </a>
+        </router-link>
         <span class="breadcrumbs__separator">/</span>
       </span>
 
@@ -15,19 +15,12 @@
   </nav>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script setup lang="ts">
 import type { BreadcrumbItem } from '@/types/breadcrumb'
-import { PropType } from 'vue'
-export default Vue.extend({
-  name: 'BreadCrumbs',
-  props: {
-    items: {
-      type: Array as PropType<BreadcrumbItem[]>,
-      required: true,
-    },
-  },
-})
+
+defineProps<{
+  items: BreadcrumbItem[]
+}>()
 </script>
 
 <style lang="scss" scoped>

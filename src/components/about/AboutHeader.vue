@@ -2,7 +2,7 @@
   <section class="about" data-test="about-header">
     <div class="about__container" data-test="about-container">
       <div class="about__content" data-test="about-content">
-        <h2 class="about__title" data-test="about-title">Our Story</h2>
+        <h2 class="about__title" data-test="about-title">{{ title }}</h2>
 
         <p class="about__text" data-test="about-text">
           Launced in 2015, Exclusive is South Asia’s premier online shopping makterplace with an
@@ -24,12 +24,8 @@
   </section>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-
-export default Vue.extend({
-  name: 'AboutHeader',
-})
+<script setup lang="ts">
+const title = 'Our Story'
 </script>
 
 <style lang="scss" scoped>

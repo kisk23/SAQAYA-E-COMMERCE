@@ -5,16 +5,10 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'TodayBadge',
-  props: {
-    label: {
-      type: String,
-      required: true,
-    },
-  },
-}
+<script setup lang="ts">
+defineProps<{
+  label: string
+}>()
 </script>
 
 <style lang="scss" scoped>

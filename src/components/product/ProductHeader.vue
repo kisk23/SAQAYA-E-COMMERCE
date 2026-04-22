@@ -5,7 +5,7 @@
     <div class="products-header__controls">
       <label class="products-header__label" data-test="sort-label">Sort by</label>
 
-      <div class="dropdown" ref="dropdown" @click.stop="toggle" data-test="dropdown">
+      <div ref="dropdown" class="dropdown" data-test="dropdown" @click.stop="toggle">
         <div class="dropdown__selected" data-test="dropdown-selected">
           {{ selected }}
         </div>
@@ -26,54 +26,51 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-  data() {
-    return {
-      open: false,
-      selected: 'Highest Rating',
-      options: ['Highest Rating', 'Price: Low to High', 'Price: High to Low'],
-    }
-  },
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-  mounted() {
-    document.addEventListener('click', this.handleClickOutside)
-  },
+const open = ref(false)
+const selected = ref('Highest Rating')
+const options = ['Highest Rating', 'Price: Low to High', 'Price: High to Low']
+const dropdown = ref<HTMLElement | null>(null)
 
-  beforeDestroy() {
-    document.removeEventListener('click', this.handleClickOutside)
-  },
+const emit = defineEmits<{
+  (e: 'change', option: string): void
+}>()
 
-  methods: {
-    toggle() {
-      this.open = !this.open
-    },
-    getTestId(option: string) {
-      const map: Record<string, string> = {
-        'Highest Rating': 'dropdown-item-highest-rating',
-        'Price: Low to High': 'dropdown-item-price--low-to-high',
-        'Price: High to Low': 'dropdown-item-price--high-to-low',
-      }
-      return map[option]
-    },
+const toggle = () => {
+  open.value = !open.value
+}
 
-    select(option: string) {
-      this.selected = option
-      this.open = false
-      this.$emit('change', option)
-    },
+const getTestId = (option: string) => {
+  const map: Record<string, string> = {
+    'Highest Rating': 'dropdown-item-highest-rating',
+    'Price: Low to High': 'dropdown-item-price--low-to-high',
+    'Price: High to Low': 'dropdown-item-price--high-to-low',
+  }
+  return map[option]
+}
 
-    handleClickOutside(event: MouseEvent) {
-      const dropdown = this.$refs.dropdown as HTMLElement
+const select = (option: string) => {
+  selected.value = option
+  open.value = false
+  emit('change', option)
+}
 
-      if (!dropdown) return
+const handleClickOutside = (event: MouseEvent) => {
+  if (!dropdown.value) return
 
-      if (!dropdown.contains(event.target as Node)) {
-        this.open = false
-      }
-    },
-  },
+  if (!dropdown.value.contains(event.target as Node)) {
+    open.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 

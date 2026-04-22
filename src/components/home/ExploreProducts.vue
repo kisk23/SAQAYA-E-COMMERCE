@@ -32,93 +32,95 @@
   </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Swiper from 'swiper'
 import { Grid } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/grid'
 import type { Product } from '@/types'
-import Vue from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useProductStore } from '@/store/modules/product'
+
 import TodayBadge from '@/components/shared/TodayBadge.vue'
 import SectionHeader from '@/components/home/SectionHeader.vue'
 import ProductCard from '@/components/shared/ProductCard.vue'
 
-export default Vue.extend({
-  name: 'ExploreProducts',
-  components: { TodayBadge, SectionHeader, ProductCard },
-  data(): { swiperInstance: Swiper | null } {
-    return {
-      swiperInstance: null,
-    }
-  },
-  computed: {
-    products(): Product[] {
-      return this.$store.getters['product/products']
-    },
-    loading(): boolean {
-      return this.$store.state.product.loading
-    },
-  },
-  created() {
-    if (!this.products.length) {
-      this.$store.dispatch('product/fetchProducts')
-    }
-  },
-  mounted() {
-    this.initSwiper()
-  },
-  beforeDestroy() {
-    this.swiperInstance?.destroy(true, true)
-  },
-  methods: {
-    initSwiper(): void {
-      const swiperElement = this.$refs.exploreProductsSwiper as HTMLElement | undefined
+const productStore = useProductStore()
+const exploreProductsSwiper = ref<HTMLElement | null>(null)
+const swiperInstance = ref<Swiper | null>(null)
 
-      if (!swiperElement) return
+const products = computed<Product[]>(() => productStore.products)
+const loading = computed<boolean>(() => productStore.loading)
 
-      this.swiperInstance = new Swiper(swiperElement, {
-        modules: [Grid],
-        slidesPerView: 4,
-        spaceBetween: 30,
-        watchOverflow: true,
+const initSwiper = () => {
+  const swiperElement = exploreProductsSwiper.value
+  if (!swiperElement || swiperInstance.value) return
+
+  swiperInstance.value = new Swiper(swiperElement, {
+    modules: [Grid],
+    slidesPerView: 4,
+    spaceBetween: 30,
+    watchOverflow: true,
+    grid: {
+      rows: 2,
+      fill: 'row',
+    },
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+        spaceBetween: 16,
         grid: {
           rows: 2,
           fill: 'row',
         },
-        breakpoints: {
-          0: {
-            slidesPerView: 1.2,
-            spaceBetween: 16,
-            grid: {
-              rows: 2,
-              fill: 'row',
-            },
-          },
-          640: {
-            slidesPerView: 2,
-            grid: {
-              rows: 2,
-              fill: 'row',
-            },
-          },
-          900: {
-            slidesPerView: 3,
-            grid: {
-              rows: 2,
-              fill: 'row',
-            },
-          },
-          1200: {
-            slidesPerView: 4,
-            grid: {
-              rows: 2,
-              fill: 'row',
-            },
-          },
+      },
+      640: {
+        slidesPerView: 2,
+        grid: {
+          rows: 2,
+          fill: 'row',
         },
-      })
+      },
+      900: {
+        slidesPerView: 3,
+        grid: {
+          rows: 2,
+          fill: 'row',
+        },
+      },
+      1200: {
+        slidesPerView: 4,
+        grid: {
+          rows: 2,
+          fill: 'row',
+        },
+      },
     },
-  },
+  })
+}
+
+onMounted(async () => {
+  if (!products.value.length) {
+    await productStore.fetchProducts()
+  }
+
+  await nextTick()
+  initSwiper()
+})
+
+watch(
+  () => products.value.length,
+  async (count) => {
+    if (count > 0 && !swiperInstance.value) {
+      await nextTick()
+      initSwiper()
+    }
+  }
+)
+
+onBeforeUnmount(() => {
+  swiperInstance.value?.destroy(true, true)
+  swiperInstance.value = null
 })
 </script>
 

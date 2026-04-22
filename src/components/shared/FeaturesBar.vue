@@ -32,11 +32,7 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'FeaturesBar',
-}
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped>
 .features {

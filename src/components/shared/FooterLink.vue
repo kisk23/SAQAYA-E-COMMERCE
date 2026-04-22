@@ -4,21 +4,11 @@
   </li>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'FooterLink',
-  props: {
-    label: {
-      type: String,
-      required: true,
-    },
-    link: {
-      type: String,
-      required: true,
-    },
-  },
-})
+<script setup lang="ts">
+defineProps<{
+  label: string
+  link: string
+}>()
 </script>
 
 <style lang="scss" scoped>

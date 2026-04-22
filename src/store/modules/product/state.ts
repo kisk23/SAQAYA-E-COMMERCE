@@ -1,19 +1,12 @@
-import { Product } from '@/types'
+import type { ProductState } from '@/types'
 
-export interface ProductState {
-  products: Product[]
-  page: number
-  loading: boolean
-  limit: number
-  hasMore: boolean
-  activeCategory: string | null
-}
-
-export const state: ProductState = {
+export const createInitialState = (): ProductState => ({
   products: [],
   page: 1,
   loading: false,
   limit: 12,
   hasMore: true,
   activeCategory: null,
-}
+  sortBy: null,
+  sortOrder: null,
+})

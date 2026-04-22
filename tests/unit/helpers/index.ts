@@ -1,5 +1,10 @@
-export { localVue, createGetHelper, setupMount, setupShallowMount, createCartStore } from './mount'
+export {
+  createGetHelper,
+  setupMount,
+  setupShallowMount,
+  createCartTestingPinia,
+} from './mount'
 
-export type { GetFn, CartStoreOptions } from './mount'
+export type { GetFn } from './mount'
 
 export { mockProduct, mockCartItems, mockMultiCartItems } from './fixtures'

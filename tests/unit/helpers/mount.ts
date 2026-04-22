@@ -1,74 +1,100 @@
-import { mount, shallowMount, Wrapper, createLocalVue } from '@vue/test-utils'
-import Vuex, { Store, GetterTree, MutationTree } from 'vuex'
-import { RootState, CartState } from '@/types'
+import { mount, shallowMount, VueWrapper } from '@vue/test-utils'
+import { createTestingPinia } from '@pinia/testing'
+import type { Component } from 'vue'
+import { DOMWrapper } from '@vue/test-utils'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-
-export { localVue }
-
-export type GetFn = (id: string) => Wrapper<Vue>
+export type GetFn = (id: string) => DOMWrapper<Element>
 
 export const createGetHelper = (
-  wrapper: Wrapper<Vue>,
+  wrapper: VueWrapper,
   attr: 'data-test' | 'data-testid' = 'data-test'
 ): GetFn => {
   return (id: string) => wrapper.find(`[${attr}="${id}"]`)
 }
 
+interface SetupOptions extends Record<string, any> {
+  pinia?: ReturnType<typeof createTestingPinia>
+  global?: Record<string, any>
+  propsData?: Record<string, any>
+  mocks?: Record<string, any>
+}
+
 interface SetupResult {
-  wrapper: Wrapper<Vue>
+  wrapper: VueWrapper
   get: GetFn
 }
 
+const normalizeMountOptions = (options: SetupOptions, pinia: ReturnType<typeof createTestingPinia>) => {
+  const normalized: Record<string, any> = { ...options }
+  const global = { ...(options.global || {}) }
+  const globalPlugins = [...(global.plugins || []), pinia]
+  global.plugins = globalPlugins
+
+  if (options.mocks) {
+    global.mocks = { ...(global.mocks || {}), ...options.mocks }
+    delete normalized.mocks
+  }
+
+  if (options.propsData && !options.props) {
+    normalized.props = options.propsData
+    delete normalized.propsData
+  }
+
+  delete normalized.pinia
+  normalized.global = global
+
+  return normalized
+}
+
 export const setupMount = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: Record<string, any> = {},
+  component: Component,
+  options: SetupOptions = {},
   attr: 'data-test' | 'data-testid' = 'data-test'
 ): SetupResult => {
-  const wrapper = mount(component, options)
-  const get = createGetHelper(wrapper, attr)
-  return { wrapper, get }
+  const pinia =
+    options.pinia ??
+    createTestingPinia({
+      createSpy: jest.fn,
+      stubActions: true,
+    })
+
+  const wrapper = mount(component as any, normalizeMountOptions(options, pinia))
+
+  return {
+    wrapper,
+    get: createGetHelper(wrapper, attr),
+  }
 }
 
 export const setupShallowMount = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: Record<string, any> = {},
+  component: Component,
+  options: SetupOptions = {},
   attr: 'data-test' | 'data-testid' = 'data-test'
 ): SetupResult => {
-  const wrapper = shallowMount(component, options)
-  const get = createGetHelper(wrapper, attr)
-  return { wrapper, get }
+  const pinia =
+    options.pinia ??
+    createTestingPinia({
+      createSpy: jest.fn,
+      stubActions: true,
+    })
+
+  const wrapper = shallowMount(component as any, normalizeMountOptions(options, pinia))
+
+  return {
+    wrapper,
+    get: createGetHelper(wrapper, attr),
+  }
 }
 
-// Vuex store factory for cart-related tests
-
-export interface CartStoreOptions {
-  getters?: Partial<GetterTree<CartState, RootState>>
-  mutations?: Partial<MutationTree<CartState>>
-}
-
-export const createCartStore = (overrides: CartStoreOptions = {}): Store<RootState> => {
-  const defaultGetters: GetterTree<CartState, RootState> = {
-    'cart/cartItems': () => [],
-    'cart/totalItems': () => 0,
-    'cart/cartTotal': () => 0,
-    ...overrides.getters,
-  }
-
-  const defaultMutations: MutationTree<CartState> = {
-    'cart/incrementCartItem': jest.fn(),
-    'cart/decreaseCartItem': jest.fn(),
-    'cart/removeFromCart': jest.fn(),
-    ...overrides.mutations,
-  }
-
-  return new Vuex.Store({
-    getters: defaultGetters,
-    mutations: defaultMutations,
+export const createCartTestingPinia = (initialState = {}) => {
+  return createTestingPinia({
+    createSpy: jest.fn,
+    stubActions: true,
+    initialState: {
+      cart: {
+        cart: [],
+        ...initialState,
+      },
+    },
   })
 }

@@ -1,65 +1,100 @@
-import { ActionTree } from 'vuex'
-import { RootState } from '@/types'
-import { ProductState } from './state'
+import type { Product } from '@/types'
 import { productService } from '@/services/product.service'
 
-export const actions: ActionTree<ProductState, RootState> = {
-  async fetchProducts({ state, commit }) {
-    if (state.loading || !state.hasMore) return
+interface ProductActionContext {
+  products: Product[]
+  page: number
+  loading: boolean
+  limit: number
+  hasMore: boolean
+  activeCategory: string | null
+  sortBy: string | null
+  sortOrder: 'asc' | 'desc' | null
+  fetchProducts: () => Promise<void>
+}
 
-    commit('setLoading', true)
+export const actions = {
+  async fetchProducts(this: ProductActionContext) {
+    if (this.loading || !this.hasMore) return
 
+    this.loading = true
     try {
-      const data = await productService.getProducts(state.limit, (state.page - 1) * state.limit)
+      const data = await productService.getProducts(
+        this.limit,
+        (this.page - 1) * this.limit,
+        this.sortBy ?? undefined,
+        this.sortOrder ?? undefined
+      )
 
       if (!data.products.length) {
-        commit('setHasMore', false)
+        this.hasMore = false
       } else {
-        commit('addProducts', data.products)
+        const existingIds = new Set(this.products.map((p) => p.id))
+        const filtered = data.products.filter((p: Product) => !existingIds.has(p.id))
+        this.products.push(...filtered)
       }
 
-      commit('setActiveCategory', null)
-      console.log('products:', data.products)
+      this.activeCategory = null
     } catch (err) {
       console.error('Fetch failed:', err)
     } finally {
-      commit('setLoading', false)
+      this.loading = false
     }
   },
-  async loadMore({ state, commit, dispatch }) {
-    // Load-more is only relevant for the default paginated listing.
-    if (state.activeCategory) return
+  async loadMore(this: ProductActionContext) {
+    if (this.activeCategory) return
 
-    commit('incrementPage')
-    await dispatch('fetchProducts')
+    this.page += 1
+    await this.fetchProducts()
   },
+  async fetchSortedProducts(
+    this: ProductActionContext,
+    sortBy: string | null,
+    sortOrder: 'asc' | 'desc' | null
+  ) {
+    if (this.loading) return
 
-  async fetchByCategory({ state, commit }, category: string) {
-    if (!category || state.loading) return
+    this.sortBy = sortBy
+    this.sortOrder = sortOrder
+    this.products = []
+    this.page = 1
+    this.hasMore = true
+    this.activeCategory = null
 
-    if (state.activeCategory === category && state.products.length) return
+    await this.fetchProducts()
+  },
+  async fetchByCategory(this: ProductActionContext, category: string) {
+    if (!category || this.loading) return
 
-    commit('setLoading', true)
-    commit('resetListingState')
-    commit('setActiveCategory', category)
+    if (this.activeCategory === category && this.products.length) return
+
+    this.loading = true
+    this.products = []
+    this.page = 1
+    this.hasMore = true
+    this.activeCategory = category
+    this.sortBy = null
+    this.sortOrder = null
 
     try {
       const data = await productService.getProductsByCategory(category)
 
-      commit('setProducts', data.products)
-      commit('setHasMore', false)
+      this.products = data.products
+      this.hasMore = false
     } catch (err) {
       console.error('Failed to fetch products:', err)
-      commit('setProducts', [])
-      commit('setHasMore', false)
+      this.products = []
+      this.hasMore = false
     } finally {
-      commit('setLoading', false)
+      this.loading = false
     }
   },
-  prepareDefaultListing({ state, commit }) {
-    if (state.activeCategory !== null) {
-      commit('resetListingState')
-      commit('setActiveCategory', null)
+  prepareDefaultListing(this: ProductActionContext) {
+    if (this.activeCategory !== null) {
+      this.products = []
+      this.page = 1
+      this.hasMore = true
+      this.activeCategory = null
     }
   },
 }

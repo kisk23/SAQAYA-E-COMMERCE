@@ -32,69 +32,70 @@
   </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Swiper from 'swiper'
 import 'swiper/css'
 import type { Product } from '@/types'
-import Vue from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useProductStore } from '@/store/modules/product'
 import TodayBadge from '@/components/shared/TodayBadge.vue'
 import SectionHeader from '@/components/home/SectionHeader.vue'
 import ProductCard from '@/components/shared/ProductCard.vue'
 
-export default Vue.extend({
-  name: 'FlashSales',
-  components: { TodayBadge, SectionHeader, ProductCard },
-  data(): { swiperInstance: Swiper | null } {
-    return {
-      swiperInstance: null,
-    }
-  },
-  computed: {
-    products(): Product[] {
-      return this.$store.getters['product/products']
-    },
-    loading(): boolean {
-      return this.$store.state.product.loading
-    },
-  },
-  created() {
-    if (!this.products.length) {
-      this.$store.dispatch('product/fetchProducts')
-    }
-  },
-  mounted() {
-    this.initSwiper()
-  },
-  beforeDestroy() {
-    this.swiperInstance?.destroy(true, true)
-  },
-  methods: {
-    initSwiper(): void {
-      const swiperElement = this.$refs.flashSalesSwiper as HTMLElement | undefined
+const productStore = useProductStore()
+const flashSalesSwiper = ref<HTMLElement | null>(null)
+const swiperInstance = ref<Swiper | null>(null)
 
-      if (!swiperElement) return
+const products = computed<Product[]>(() => productStore.products)
+const loading = computed<boolean>(() => productStore.loading)
 
-      this.swiperInstance = new Swiper(swiperElement, {
+const initSwiper = () => {
+  const swiperElement = flashSalesSwiper.value
+  if (!swiperElement || swiperInstance.value) return
+
+  swiperInstance.value = new Swiper(swiperElement, {
+    slidesPerView: 4,
+    spaceBetween: 30,
+    watchOverflow: true,
+    breakpoints: {
+      0: {
+        slidesPerView: 1.2,
+      },
+      640: {
+        slidesPerView: 2,
+      },
+      900: {
+        slidesPerView: 3,
+      },
+      1200: {
         slidesPerView: 4,
-        spaceBetween: 30,
-        watchOverflow: true,
-        breakpoints: {
-          0: {
-            slidesPerView: 1.2,
-          },
-          640: {
-            slidesPerView: 2,
-          },
-          900: {
-            slidesPerView: 3,
-          },
-          1200: {
-            slidesPerView: 4,
-          },
-        },
-      })
+      },
     },
-  },
+  })
+}
+
+onMounted(async () => {
+  if (!products.value.length) {
+    await productStore.fetchProducts()
+  }
+
+  await nextTick()
+  initSwiper()
+})
+
+watch(
+  () => products.value.length,
+  async (count) => {
+    if (count > 0 && !swiperInstance.value) {
+      await nextTick()
+      initSwiper()
+    }
+  }
+)
+
+onBeforeUnmount(() => {
+  swiperInstance.value?.destroy(true, true)
+  swiperInstance.value = null
 })
 </script>
 

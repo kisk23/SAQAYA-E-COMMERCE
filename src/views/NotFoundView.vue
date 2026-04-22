@@ -14,28 +14,17 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Breadcrumbs from '@/components/shared/BreadCrumbs.vue'
-import Vue from 'vue'
-export default Vue.extend({
-  name: 'NotFound',
-  components: { Breadcrumbs },
 
-  data() {
-    return {
-      breadcrumbs: [
-        { label: 'Home', link: '/' },
-        { label: '404 Error', link: '/404' },
-      ],
-    }
-  },
+import { useRouter } from 'vue-router'
 
-  methods: {
-    goHome() {
-      this.$router.push('/')
-    },
-  },
-})
+const breadcrumbs = [{ label: 'Home', link: '/' }]
+
+const goHome = () => {
+  const router = useRouter()
+  router.push('/')
+}
 </script>
 
 <style lang="scss" scoped>

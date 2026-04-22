@@ -4,8 +4,8 @@ export interface CategoryState {
   selectedCategory: string | null
 }
 
-export const state: CategoryState = {
+export const createInitialState = (): CategoryState => ({
   categories: [],
   loading: false,
   selectedCategory: null,
-}
+})

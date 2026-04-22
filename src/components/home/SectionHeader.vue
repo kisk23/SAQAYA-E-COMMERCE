@@ -3,18 +3,21 @@
     <h2 class="section-header__title">{{ title }}</h2>
 
     <div class="section-header__controls">
-      <button @click="$emit('prev')" class="section-header__btn">←</button>
-      <button @click="$emit('next')" class="section-header__btn">→</button>
+      <button class="section-header__btn" @click="emit('prev')">&larr;</button>
+      <button class="section-header__btn" @click="emit('next')">&rarr;</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  props: {
-    title: String,
-  },
-}
+<script setup lang="ts">
+defineProps<{
+  title: string
+}>()
+
+const emit = defineEmits<{
+  (event: 'prev'): void
+  (event: 'next'): void
+}>()
 </script>
 
 <style lang="scss" scoped>

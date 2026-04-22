@@ -2,11 +2,13 @@ import { http } from './http'
 import type { Product } from '@/types'
 
 export const productService = {
-  async getProducts(limit?: number, skip?: number) {
+  async getProducts(limit?: number, skip?: number, sortBy?: string, order?: 'asc' | 'desc') {
     const res = await http.get('/products', {
       params: {
         limit,
         skip,
+        sortBy,
+        order,
       },
     })
 
