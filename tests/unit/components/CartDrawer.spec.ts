@@ -1,41 +1,46 @@
-
-
-import { shallowMount } from '@vue/test-utils'
 import CartDrawer from '@/components/cart/CartDrawer.vue'
-import {
-  localVue,
-  setupShallowMount,
-  createCartStore,
-  mockCartItems,
-  mockMultiCartItems,
-} from '@tests/helpers'
+import { useCartStore } from '@/store/modules/cart'
+import { setupShallowMount, createCartTestingPinia } from '@tests/helpers'
 
-describe('CartDrawer (missing unit tests)', () => {
-  let mutations: Record<string, jest.Mock>
+const createProduct = (id: number, title: string, price: number, thumbnail = 'img.jpg') => ({
+  id,
+  title,
+  description: '',
+  price,
+  discountPercentage: 0,
+  rating: 0,
+  stock: 10,
+  brand: '',
+  category: '',
+  sku: '',
+  weight: 1,
+  dimensions: { width: 1, height: 1, depth: 1 },
+  images: [thumbnail],
+  thumbnail,
+  tags: [],
+  reviews: [],
+  availabilityStatus: '',
+  returnPolicy: '',
+  warrantyInformation: '',
+  shippingInformation: '',
+  minimumOrderQuantity: 1,
+  meta: { createdAt: '', updatedAt: '', barcode: '', qrCode: '' },
+})
 
-  beforeEach(() => {
-    mutations = {
-      'cart/incrementCartItem': jest.fn(),
-      'cart/decreaseCartItem': jest.fn(),
-      'cart/removeFromCart': jest.fn(),
-    }
-  })
+const singleCart = [{ product: createProduct(1, 'Test Product', 100), quantity: 2 }]
+const multiCart = [
+  { product: createProduct(1, 'Product A', 100, 'a.jpg'), quantity: 1 },
+  { product: createProduct(2, 'Product B', 100, 'b.jpg'), quantity: 3 },
+  { product: createProduct(3, 'Product C', 100, 'c.jpg'), quantity: 2 },
+]
 
-  const factory = (props = { isOpen: true }) => {
-    const store = createCartStore({
-      getters: {
-        'cart/cartItems': () => mockCartItems,
-        'cart/totalItems': () => 2,
-        'cart/cartTotal': () => 200,
-      },
-      mutations,
-    })
+describe('CartDrawer', () => {
+  const factory = (props = { isOpen: true }, cart = singleCart) => {
+    const pinia = createCartTestingPinia({ cart })
+    const mounted = setupShallowMount(CartDrawer, { pinia, props })
+    const cartStore = useCartStore(pinia)
 
-    return setupShallowMount(CartDrawer, {
-      localVue,
-      store,
-      propsData: props,
-    })
+    return { ...mounted, cartStore }
   }
 
   it('adds active class to backdrop when isOpen is true', () => {
@@ -69,20 +74,7 @@ describe('CartDrawer (missing unit tests)', () => {
   })
 
   it('renders all items when cart has multiple entries', () => {
-    const store = createCartStore({
-      getters: {
-        'cart/cartItems': () => mockMultiCartItems,
-        'cart/totalItems': () => 6,
-        'cart/cartTotal': () => 600,
-      },
-      mutations,
-    })
-
-    const wrapper = shallowMount(CartDrawer, {
-      localVue,
-      store,
-      propsData: { isOpen: true },
-    })
+    const { wrapper } = factory({ isOpen: true }, multiCart)
 
     expect(wrapper.findAll('[data-test="cart-item"]').length).toBe(3)
   })
@@ -118,5 +110,17 @@ describe('CartDrawer (missing unit tests)', () => {
     await get('drawer').trigger('click')
 
     expect(wrapper.emitted('close')).toBeFalsy()
+  })
+
+  it('calls cart actions when controls are clicked', async () => {
+    const { wrapper, cartStore } = factory()
+
+    await wrapper.find('[data-test="increase"]').trigger('click')
+    await wrapper.find('[data-test="decrease"]').trigger('click')
+    await wrapper.find('[data-test="remove"]').trigger('click')
+
+    expect(cartStore.incrementCartItem).toHaveBeenCalledWith(1)
+    expect(cartStore.decreaseCartItem).toHaveBeenCalledWith(1)
+    expect(cartStore.removeFromCart).toHaveBeenCalledWith(1)
   })
 })
